@@ -24,7 +24,7 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-sign-in.html">
+                <a class="sidebar-link" href="{{route('leads.view')}}">
                     <i class="align-middle" data-feather="flag"></i>
                     <span class="align-middle">Lead Yönetimi</span>
                 </a>

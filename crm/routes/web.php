@@ -10,6 +10,8 @@ Route::get('/', function () {
 
 Route::get('/leads/view', [LeadController::class,'view'])->name('leads.view');
 Route::get('/leads/index', [LeadController::class,'index'])->name('leads.index');
+Route::get('/leads/edit', [LeadController::class,'edit'])->name('leads.edit');
+
 Route::get('/leads/create', [LeadController::class,'create'])->name('leads.create');
 Route::get('/leads/status-list', [LeadController::class,'status'])->name('leads.status');
 Route::get('/leads/sources-list', [LeadController::class,'leadSources'])->name('leads.leadSources');
@@ -17,3 +19,4 @@ Route::get('/leads/report', [LeadController::class,'miniReport'])->name('leads.m
 
 
 Route::post('/leads/store', [LeadController::class,'store'])->name('leads.store');
+Route::get('/leads/fetch', [LeadController::class,'fetch'])->name('leads.fetch');

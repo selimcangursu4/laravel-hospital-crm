@@ -4,6 +4,7 @@
         <div class="card shadow-sm">
             <div class="card-header fw-bold">
                 Yeni Lead Ekle
+                <a href="{{route('leads.view')}}" class="btn btn-danger btn-sm float-end">Geri Dön</a>
             </div>
             <div class="card-body">
                 <form>

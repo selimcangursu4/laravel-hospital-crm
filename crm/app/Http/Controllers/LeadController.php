@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\LeadSource;
 use App\Models\LeadStatus;
 use App\Models\Service;
+use App\Models\User;
 use App\Models\Lead;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,12 @@ class LeadController extends Controller
     // Tüm Leadler Sayfası
     public function index()
     {
-        return view('leads.index');
+        $services = Service::all();
+        $sources = LeadSource::all();
+        $statuses = LeadStatus::all();
+        $users = User::all();
+
+        return view('leads.index',compact('services','sources','statuses','users'));
     }
     // Yeni Lead Oluşturma Sayfası
     public function create()
@@ -91,4 +97,55 @@ class LeadController extends Controller
         ]);
       }
     }
+    // Tüm Leadleri Getirme
+    public function fetch(Request $request)
+    {
+    $query = Lead::select(
+        'leads.id',
+        'leads.fullname',
+        'leads.phone',
+        'leads.gender_id',
+        'services.name as service_name',
+        'lead_sources.name as source_name',
+        'lead_statues.name as status_name',
+        'users.name as user_name'
+    )
+    ->leftJoin('services', 'leads.service_id', '=', 'services.id')
+    ->leftJoin('lead_sources', 'leads.source_id', '=', 'lead_sources.id')
+    ->leftJoin('lead_statues', 'leads.lead_status_id', '=', 'lead_statues.id')
+    ->leftJoin('users', 'leads.user_id', '=', 'users.id');
+
+
+    // Filtreleme
+    if ($request->search_id) {
+        $query->where('leads.id', $request->search_id);
+    }
+    if ($request->search_fullname) {
+        $query->where('leads.fullname', 'like', '%' . $request->search_fullname . '%');
+    }
+    if ($request->search_phone) {
+        $query->where('leads.phone', 'like', '%' . $request->search_phone . '%');
+    }
+    if ($request->search_gender_id) {
+        $query->where('leads.gender_id', $request->search_gender_id);
+    }
+    if ($request->search_service_id) {
+        $query->where('leads.service_id', $request->search_service_id);
+    }
+    if ($request->search_source_id) {
+        $query->where('leads.source_id', $request->search_source_id);
+    }
+    if ($request->search_lead_status_id) {
+        $query->where('leads.lead_status_id', $request->search_lead_status_id);
+    }
+    if ($request->search_user_id) {
+        $query->where('leads.user_id', $request->search_user_id);
+    }
+
+    $leads = $query->get();
+
+    return response()->json($leads);
+    }
+
+
 }
