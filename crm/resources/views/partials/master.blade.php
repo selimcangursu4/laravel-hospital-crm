@@ -12,12 +12,12 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Hastane Yönetim Paneli</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.css" />
     <script src="https://cdn.datatables.net/2.3.5/js/dataTables.js"></script>
 </head>
-
 <body>
     <div class="wrapper">
         @include('partials.sidebar')
@@ -31,5 +31,4 @@
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
-
 </html>

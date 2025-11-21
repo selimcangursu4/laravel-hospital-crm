@@ -146,6 +146,14 @@ class LeadController extends Controller
 
     return response()->json($leads);
     }
+    // Lead Düzenleme Sayfası
+    public function edit($id)
+    {
+        $lead = Lead::find($id);
+        $sources = LeadSource::all();
+        $services = Service::all();
+        return view('leads.edit',compact('lead','sources','services'));
+    }
 
 
 }

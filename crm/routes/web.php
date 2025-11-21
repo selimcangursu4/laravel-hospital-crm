@@ -10,7 +10,7 @@ Route::get('/', function () {
 
 Route::get('/leads/view', [LeadController::class,'view'])->name('leads.view');
 Route::get('/leads/index', [LeadController::class,'index'])->name('leads.index');
-Route::get('/leads/edit', [LeadController::class,'edit'])->name('leads.edit');
+Route::get('/leads/edit/{id}', [LeadController::class,'edit'])->name('leads.edit');
 
 Route::get('/leads/create', [LeadController::class,'create'])->name('leads.create');
 Route::get('/leads/status-list', [LeadController::class,'status'])->name('leads.status');
