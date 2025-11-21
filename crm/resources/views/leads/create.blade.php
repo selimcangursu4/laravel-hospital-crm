@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Şehir</label>
-                             <select class="form-select mb-3" id="city_id">
+                            <select class="form-select mb-3" id="city_id">
                                 <option selected>Seçiniz</option>
                                 <option value="1">İstanbul</option>
                                 <option value="2">Münih</option>
@@ -61,20 +61,20 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">İlgilendiği Operasyon</label>
-                           <select class="form-select mb-3" id="service_id">
+                            <select class="form-select mb-3" id="service_id">
                                 <option selected>Seçiniz</option>
-                                <option value="1">Operasyon 1</option>
-                                <option value="2">Operasyon 2</option>
-                                <option value="3">Operasyon 3</option>
+                                @foreach ($services as $service)
+                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Lead Kaynağı</label>
                             <select class="form-select mb-3" id="source_id">
                                 <option selected>Seçiniz</option>
-                                <option value="1">Kaynak 1</option>
-                                <option value="2">Kaynak 2</option>
-                                <option value="3">Kaynak 3</option>
+                                @foreach ($sources as $source)
+                                    <option value="{{ $source->id }}">{{ $source->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-12 mt-4 mb-3">
@@ -86,11 +86,59 @@
                             <textarea class="form-control" rows="4" id="note" placeholder="Lead hakkında ek bilgi yazabilirsiniz..."></textarea>
                         </div>
                         <div class="col-12 mt-3">
-                            <button id="save" class="btn btn-primary float-end px-4">Yeni Lead Ekle</button>
+                            <button id="save" type="button" class="btn btn-primary float-end px-4">Yeni Lead
+                                Ekle</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('#save').click(function(e) {
+                e.preventDefault();
+
+                let fullname = $('#fullname').val();
+                let email = $('#email').val();
+                let phone = $('#phone').val();
+                let birth_date = $('#birth_date').val();
+                let gender_id = $('#gender_id').val();
+                let country_id = $('#country_id').val();
+                let city_id = $('#city_id').val();
+                let service_id = $('#service_id').val();
+                let source_id = $('#source_id').val();
+                let note = $('#note').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('leads.store') }}",
+                    data: {
+                        fullname: fullname,
+                        email: email,
+                        phone: phone,
+                        birth_date: birth_date,
+                        gender_id: gender_id,
+                        country_id: country_id,
+                        city_id: city_id,
+                        service_id: service_id,
+                        source_id: source_id,
+                        note: note,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            position: "top-center",
+                            icon: "success",
+                            title: response.message,
+                            showConfirmButton: true,
+                        });
+                    },
+                    error: function(xhr) {
+                        alert('Lead eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.');
+                    }
+                })
+            })
+        })
+    </script>
 @endsection
