@@ -315,12 +315,24 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        ...
+                        <form>
+                            @csrf
+                            <div class="mb-3" hidden>
+                                <label for="insert_file_lead_id">Lead Id</label>
+                                <input type="text" id="insert_file_lead_id" class="form-control"
+                                    value="{{ $lead->id }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="insert_file_lead_id">Eklenecek Dosya</label>
+                                <input type="file" id="insert_file_lead" class="form-control" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                <button type="button" id="saveFileButton" class="btn btn-primary">Dosya Ekle</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                        <button type="button" class="btn btn-primary">Dosya Ekle</button>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -503,7 +515,44 @@
 
             })
             // Dosya Eki Ekle
+            $('#saveFileButton').click(function(e) {
+                e.preventDefault();
 
+                let lead_id = $('#insert_file_lead_id').val();
+                let file_data = $('#insert_file_lead').prop('files')[0];
+                let formData = new FormData();
+                formData.append('_token', "{{ csrf_token() }}");
+                formData.append('lead_id', lead_id);
+                formData.append('file', file_data);
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('leads.file.upload') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı!',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        $('#fileAttachModal').modal('hide');
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: error.responseJSON?.message ??
+                                'Dosya eklenirken bir sorun oluştu.',
+                        });
+
+                        console.log(error);
+                    }
+                })
+            })
             // Arama Yap Log Kaydı
 
             // Lead Silme İşlemi

@@ -9,6 +9,8 @@ use App\Models\Service;
 use App\Models\User;
 use App\Models\Lead;
 use App\Models\LeadAssignmentLog;
+use App\Models\LeadFile;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -253,6 +255,58 @@ class LeadController extends Controller
             ]);
         }
     }
+    // Leade Ait Dosya Yükleme
+    public function leadFileUpload(Request $request)
+    {
+      try {
+        $request->validate([
+            'lead_id' => 'required|exists:leads,id',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ]);
+
+        $lead_id = $request->input('lead_id');
+        $file = $request->file('file');
+
+        // Dosya adını benzersiz yap
+        $fileName = time() . '_' . $file->getClientOriginalName();
+
+        $directory = 'public/lead_files';
+
+        // Eğer klasör yoksa oluştur
+        if (!Storage::exists($directory)) {
+         Storage::makeDirectory($directory);
+        }
+
+        // Dosyayı klasöre kaydet
+        $filePath = $file->storeAs($directory, $fileName);
+
+        // Veritabanına kaydet
+        $leadFile = new LeadFile();
+        $leadFile->lead_id = $lead_id;
+        $leadFile->file_path = $filePath;
+        $leadFile->original_name = $file->getClientOriginalName();
+        $leadFile->uploaded_by = auth()->id() ?? 1;
+        $leadFile->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Dosya başarıyla yüklendi.',
+            'file' => $leadFile
+        ]);
+
+       } catch (Exception $e) {
+        Log::error('Lead dosya yükleme hatası: ' . $e->getMessage(), [
+            'request' => $request->all(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Dosya yüklenirken bir hata oluştu: ' . $e->getMessage()
+        ], 500);
+     }
+    }
+
 
 
 
