@@ -133,11 +133,93 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                        <button type="button" class="btn btn-primary">Bilgileri Güncelle</button>
+                        <form>
+                            @csrf
+                            <div class="mb-3" hidden>
+                                <label for="update_lead_id">Lead Id</label>
+                                <input type="text" id="update_lead_id" class="form-control"
+                                    value="{{ $lead->id }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_lead_fullname">İsim Soyisim</label>
+                                <input type="text" id="update_lead_fullname" class="form-control"
+                                    value="{{ $lead->fullname }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_lead_email">E-Posta Adresi</label>
+                                <input type="text" id="update_lead_email" class="form-control"
+                                    value="{{ $lead->email }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_lead_phone">Telefon Numarası</label>
+                                <input type="text" id="update_lead_phone" class="form-control"
+                                    value="{{ $lead->phone }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_lead_birth_date">Doğum Tarihi</label>
+                                <input type="date" id="update_lead_birth_date" class="form-control"
+                                    value="{{ $lead->birth_date }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_gender_id">Cinsiyet</label>
+                                <select class="form-select mb-3" id="update_gender_id">
+                                    <option value="" disabled>Seçiniz</option>
+                                    <option value="1" {{ $lead->gender_id == 1 ? 'selected' : '' }}>Erkek</option>
+                                    <option value="2" {{ $lead->gender_id == 2 ? 'selected' : '' }}>Kadın</option>
+                                    <option value="3" {{ $lead->gender_id == 3 ? 'selected' : '' }}>Belirtilmedi
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_country_id">Ülke</label>
+                                <select class="form-select mb-3" id="update_country_id">
+                                    <option value="" disabled>Seçiniz</option>
+                                    <option value="1" {{ $lead->country_id == 1 ? 'selected' : '' }}>Türkiye</option>
+                                    <option value="2" {{ $lead->country_id == 2 ? 'selected' : '' }}>Almanya</option>
+                                    <option value="3" {{ $lead->country_id == 3 ? 'selected' : '' }}>Belirtilmedi
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_city_id">Şehir</label>
+                                <select class="form-select mb-3" id="update_city_id">
+                                    <option value="" disabled>Seçiniz</option>
+                                    <option value="1" {{ $lead->city_id == 1 ? 'selected' : '' }}>İstanbul</option>
+                                    <option value="2" {{ $lead->city_id == 2 ? 'selected' : '' }}>Münih</option>
+                                    <option value="3" {{ $lead->city_id == 3 ? 'selected' : '' }}>Belirtilmedi
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_service_id">İlgilendiği Hizmet</label>
+                                <select class="form-select mb-3" id="update_service_id">
+                                    <option value="" disabled>Seçiniz</option>
+                                    @foreach ($services as $service)
+                                        <option value="{{ $service->id }}"
+                                            {{ $lead->service_id == $service->id ? 'selected' : '' }}>
+                                            {{ $service->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_source_id">Lead Kaynağı</label>
+                                <select class="form-select mb-3" id="update_source_id">
+                                    <option value="" disabled>Seçiniz</option>
+                                    @foreach ($sources as $source)
+                                        <option value="{{ $source->id }}"
+                                            {{ $lead->source_id == $source->id ? 'selected' : '' }}>
+                                            {{ $source->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                <button type="button" id="updateLeadButton" class="btn btn-primary">Bilgileri
+                                    Güncelle</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -242,6 +324,59 @@
                         console.log(error);
                     }
 
+                })
+            })
+            // Lead Güncelleme İşlemi
+            $('#updateLeadButton').click(function(e) {
+                e.preventDefault();
+
+                let lead_id = $('#update_lead_id').val();
+                let fullname = $('#update_lead_fullname').val();
+                let email = $('#update_lead_email').val();
+                let phone = $('#update_lead_phone').val();
+                let birth_date = $('#update_lead_birth_date').val();
+                let gender_id = $('#update_gender_id').val();
+                let country_id = $('#update_country_id').val();
+                let city_id = $('#update_city_id').val();
+                let service_id = $('#update_service_id').val();
+                let source_id = $('#update_source_id').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('leads.update') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        lead_id: lead_id,
+                        fullname: fullname,
+                        email: email,
+                        phone: phone,
+                        birth_date: birth_date,
+                        gender_id: gender_id,
+                        country_id: country_id,
+                        city_id: city_id,
+                        service_id: service_id,
+                        source_id: source_id
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı!',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        $('#staticBackdrop').modal('hide');
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: error.responseJSON?.message ??
+                                'Lead güncellenirken bir sorun oluştu.',
+                        });
+
+                        console.log(error);
+                    }
                 })
             })
         })

@@ -154,6 +154,63 @@ class LeadController extends Controller
         $services = Service::all();
         return view('leads.edit',compact('lead','sources','services'));
     }
+    // Lead Güncelleme Post İşlemi
+    public function update(Request $request)
+    {
+      try {
+
+        $leadId = $request->input('lead_id');
+        $lead = Lead::find($leadId);
+
+        if (!$lead) {
+            Log::warning('Lead güncelleme denemesi başarısız: Lead bulunamadı.', [
+                'lead_id' => $leadId,
+                'request' => $request->all()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Lead bulunamadı.'
+            ], 404);
+        }
+        $lead->fullname    = $request->input('fullname');
+        $lead->email       = $request->input('email');
+        $lead->phone       = $request->input('phone');
+        $lead->birth_date  = $request->input('birth_date');
+        $lead->gender_id   = $request->input('gender_id');
+        $lead->country_id  = $request->input('country_id');
+        $lead->city_id     = $request->input('city_id');
+        $lead->service_id  = $request->input('service_id');
+        $lead->source_id   = $request->input('source_id');
+        $lead->save();
+
+        Log::info('Lead başarıyla güncellendi.', [
+            'lead_id' => $lead->id,
+            'updated_by' => auth()->id(),
+            'updated_fields' => $request->all()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Lead başarıyla güncellendi.'
+        ], 200);
+
+     } catch (\Throwable $th) {
+
+        Log::error('Lead güncelleme hatası!', [
+            'error_message' => $th->getMessage(),
+            'lead_id' => $request->input('lead_id'),
+            'request' => $request->all(),
+            'trace' => $th->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Lead güncellenirken bir hata oluştu.',
+        ], 500);
+      }
+    }
+
 
 
 }
