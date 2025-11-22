@@ -6,7 +6,9 @@
                 Sms Gönder
             </button>
             <button id="makeCallButton" class="btn btn-info me-2">Arama Yap</button>
-            <button class="btn btn-success me-2">WhatsApp'tan Ulaş</button>
+            <a href="https://wa.me/{{ $lead->phone }}?text=Merhaba Amerikan Estetik Hastanesinden Sizlere Ulaşıyorum" target="_blank" class="btn btn-success me-2">
+                WhatsApp'tan Ulaş
+            </a>
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 Bilgileri Düzenle
             </button>
@@ -568,7 +570,7 @@
 
                         $.ajax({
                             type: 'POST',
-                            url: '{{route('lead.call.log')}}',
+                            url: '{{ route('lead.call.log') }}',
                             data: {
                                 _token: "{{ csrf_token() }}",
                                 lead_id: lead_id,
@@ -595,8 +597,6 @@
                     }
                 });
             });
-
-
             // Lead Silme İşlemi
 
 
