@@ -204,8 +204,17 @@ class LeadController extends Controller
             ->where('sms_logs.lead_id', $id)
             ->orderBy('sms_logs.created_at', 'desc')
             ->get();
+            $leadFiles = DB::table('lead_files')
+            ->leftJoin('users', 'lead_files.uploaded_by', '=', 'users.id')
+            ->select(
+            'lead_files.*',
+            'users.name as called_by_name'
+             )
+            ->where('lead_files.lead_id', $id)
+            ->orderBy('lead_files.created_at', 'desc')
+            ->get();
 
-        return view('leads.edit',compact('lead','sources','services','statuses','users','activities','callLogs','smsLogs'));
+        return view('leads.edit',compact('lead','sources','services','statuses','users','activities','callLogs','smsLogs','leadFiles'));
     }
     // Lead Güncelleme Post İşlemi
     public function update(Request $request)
@@ -387,7 +396,13 @@ class LeadController extends Controller
             ], 500);
         }
     }
+    // Lead File İndirme
+    public function download($id)
+    {
+      $file = LeadFile::findOrFail($id);
 
+      return Storage::disk('private')->download('lead_files/' . basename($file->file_path), $file->original_name);
+    }
 
 
 

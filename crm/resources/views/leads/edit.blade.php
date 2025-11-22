@@ -222,15 +222,15 @@
                         </div>
                     </div>
 
-
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title">Lead Dosya Ekleri</h5>
                         </div>
                         <div class="card-body">
-                            <table>
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>Dosya Adı</th>
                                         <th>Yükleme Tarihi</th>
                                         <th>Yükleyen</th>
@@ -238,15 +238,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>ornek_dosya.pdf</td>
-                                        <td>2024-06-15</td>
-                                        <td>Ahmet Yılmaz</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary">İndir</button>
-                                            <button class="btn btn-sm btn-danger">Sil</button>
-                                        </td>
-                                    </tr>
+                                    @forelse($leadFiles as $index => $file)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $file->original_name }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($file->created_at)->format('Y-m-d H:i') }}</td>
+                                            <td>{{ $file->called_by_name ?? '-' }}</td>
+                                            <td>
+                                                <a href="{{ route('lead.file.download', $file->id) }}"
+                                                    class="btn btn-sm btn-primary me-1">
+                                                    <i data-feather="download"></i> İndir
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">Dosya eklenmemiş.</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

@@ -25,6 +25,8 @@ Route::post('/leads/file-upload', [LeadController::class,'leadFileUpload'])->nam
 Route::post('/leads/delete', [LeadController::class, 'delete'])->name('lead.delete');
 Route::post('/leads/store', [LeadController::class,'store'])->name('leads.store');
 Route::get('/leads/fetch', [LeadController::class,'fetch'])->name('leads.fetch');
+Route::get('/lead/file/download/{id}', [LeadController::class, 'download'])->name('lead.file.download');
+
 
 
 Route::post('/lead-activity/store',[LeadActivityController::class,'store'])->name('lead.activity.store');
