@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\LeadSource;
 use App\Models\LeadStatus;
@@ -152,7 +153,20 @@ class LeadController extends Controller
     // Lead Düzenleme Sayfası
     public function edit($id)
     {
-        $lead = Lead::find($id);
+      $lead = DB::table('leads')
+        ->leftJoin('services', 'leads.service_id', '=', 'services.id')
+        ->leftJoin('lead_sources', 'leads.source_id', '=', 'lead_sources.id')
+        ->leftJoin('lead_statues', 'leads.lead_status_id', '=', 'lead_statues.id')
+        ->leftJoin('users', 'leads.user_id', '=', 'users.id')
+        ->select(
+            'leads.*',
+            'services.name as service_name',
+            'lead_sources.name as source_name',
+            'lead_statues.name as status_name',
+            'users.name as user_name',
+        )
+        ->where('leads.id', $id)
+        ->first();
         $sources = LeadSource::all();
         $services = Service::all();
         $statuses = LeadStatus::all();

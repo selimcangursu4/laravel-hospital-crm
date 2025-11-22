@@ -35,17 +35,72 @@
                         <h5 class="card-title">Lead Bilgileri</h5>
                     </div>
                     <div class="card-body">
-                        Test
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Ad Soyad</th>
+                                    <td>{{ $lead->fullname }}</td>
+                                </tr>
+                                <tr>
+                                    <th>E-posta</th>
+                                    <td>{{ $lead->email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Telefon</th>
+                                    <td>{{ $lead->phone }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Doğum Tarihi</th>
+                                    <td>{{ $lead->birth_date ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Cinsiyet</th>
+                                    <td>
+                                        @if ($lead->gender_id == 1)
+                                            Erkek
+                                        @elseif($lead->gender_id == 2)
+                                            Kadın
+                                        @elseif($lead->gender_id == 3)
+                                            Belirtilmedi
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Ülke</th>
+                                    <td>{{ $lead->country_id ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Şehir</th>
+                                    <td>{{ $lead->city_id ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Hizmet</th>
+                                    <td>{{ $lead->service_name ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Kaynak</th>
+                                    <td>{{ $lead->source_name ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Not</th>
+                                    <td>{{ $lead->note ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Sorumlu Kullanıcı</th>
+                                    <td>{{ $lead->user_name ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Lead Durumu</th>
+                                    <td>{{ $lead->status_name ?? '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Lead Sms Geçmişi</h5>
-                    </div>
-                    <div class="card-body">
-                        Test
-                    </div>
-                </div>
+
+
             </div>
             <div class="col-md-8">
                 <div class="card">
@@ -64,8 +119,14 @@
                         Test
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Lead Sms Geçmişi</h5>
+                    </div>
+                    <div class="card-body">
+                        Test
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">Lead Dosya Ekleri</h5>
@@ -648,9 +709,6 @@
                     }
                 });
             });
-
-
-
         })
     </script>
 @endsection
