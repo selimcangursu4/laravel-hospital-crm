@@ -152,7 +152,8 @@ class LeadController extends Controller
         $lead = Lead::find($id);
         $sources = LeadSource::all();
         $services = Service::all();
-        return view('leads.edit',compact('lead','sources','services'));
+        $statuses = LeadStatus::all();
+        return view('leads.edit',compact('lead','sources','services','statuses'));
     }
     // Lead Güncelleme Post İşlemi
     public function update(Request $request)

@@ -234,11 +234,32 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                        <button type="button" class="btn btn-primary">Aktiviteyi Kaydet</button>
+                        <form>
+                            @csrf
+                            <div class="mb-3" hidden>
+                                <label for="activity_lead_id">Lead Id</label>
+                                <input type="text" id="activity_lead_id" class="form-control"
+                                    value="{{ $lead->id }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="activity_lead_status">Lead Durumu Seçiniz</label>
+                                <select class="form-select mb-3" id="activity_lead_status_id">
+                                    <option selected>Seçiniz...</option>
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="activity_lead_description">Konuşma Detayı</label>
+                                <textarea class="form-control" id="activity_lead_description" rows="5"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                <button type="button" id="saveActivityLead" class="btn btn-primary">Aktiviteyi
+                                    Kaydet</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -379,6 +400,54 @@
                     }
                 })
             })
+            // Lead Aktivite Ekleme İşlemi
+            $('#saveActivityLead').click(function(e) {
+                e.preventDefault();
+
+                let lead_id = $('#activity_lead_id').val();
+                let status_id = $('#activity_lead_status_id').val();
+                let description = $('#activity_lead_description').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('lead.activity.store') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        lead_id: lead_id,
+                        status_id: status_id,
+                        description: description
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı!',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        $('#activityModal').modal('hide');
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: error.responseJSON?.message ??
+                                'Lead aktivite eklenirken bir sorun oluştu.',
+                        });
+
+                        console.log(error);
+                    }
+                })
+            })
+            // Lead Atanan Personeli Güncelle
+
+            // Dosya Eki Ekle
+
+            // Arama Yap Log Kaydı
+
+            // Lead Silme İşlemi
+
+
         })
     </script>
 @endsection
