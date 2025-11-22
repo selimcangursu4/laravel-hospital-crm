@@ -99,8 +99,6 @@
                         </table>
                     </div>
                 </div>
-
-
             </div>
             <div class="col-md-8">
                 <div class="card">
@@ -108,9 +106,31 @@
                         <h5 class="card-title">Lead Aktivite Geçmişi</h5>
                     </div>
                     <div class="card-body">
-                        <table></table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Durum</th>
+                                    <th>Açıklama</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Tarih</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($activities as $index => $activity)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $activity->status_name }}</td>
+                                        <td>{{ $activity->description }}</td>
+                                        <td>{{ $activity->user_name }}</td>
+                                        <td>{{ $activity->created_at }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">Lead Arama Geçmişi</h5>

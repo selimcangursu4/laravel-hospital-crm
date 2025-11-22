@@ -171,7 +171,22 @@ class LeadController extends Controller
         $services = Service::all();
         $statuses = LeadStatus::all();
         $users = User::all();
-        return view('leads.edit',compact('lead','sources','services','statuses','users'));
+
+        // Lead Aktivitelerini Getir
+
+        $activities  = DB::table('lead_activities')
+            ->leftJoin('users', 'lead_activities.user_id', '=', 'users.id')
+            ->leftJoin('lead_statues', 'lead_activities.lead_status_id', '=', 'lead_statues.id')
+            ->select(
+                'lead_activities.*',
+                'users.name as user_name',
+                'lead_statues.name as status_name'
+            )
+            ->where('lead_activities.lead_id', $id)
+            ->orderBy('lead_activities.created_at', 'desc')
+            ->get();
+
+        return view('leads.edit',compact('lead','sources','services','statuses','users','activities'));
     }
     // Lead Güncelleme Post İşlemi
     public function update(Request $request)
