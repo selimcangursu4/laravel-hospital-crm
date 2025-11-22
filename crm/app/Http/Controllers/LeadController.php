@@ -173,7 +173,6 @@ class LeadController extends Controller
         $users = User::all();
 
         // Lead Aktivitelerini Getir
-
         $activities  = DB::table('lead_activities')
             ->leftJoin('users', 'lead_activities.user_id', '=', 'users.id')
             ->leftJoin('lead_statues', 'lead_activities.lead_status_id', '=', 'lead_statues.id')
@@ -185,8 +184,19 @@ class LeadController extends Controller
             ->where('lead_activities.lead_id', $id)
             ->orderBy('lead_activities.created_at', 'desc')
             ->get();
+            // Lead Arama Loglarını Getir
+            $callLogs = DB::table('lead_call_logs')
+            ->leftJoin('users', 'lead_call_logs.called_by', '=', 'users.id')
+            ->select(
+            'lead_call_logs.*',
+            'users.name as called_by_name'
+             )
+            ->where('lead_call_logs.lead_id', $id)
+            ->orderBy('lead_call_logs.created_at', 'desc')
+            ->get();
 
-        return view('leads.edit',compact('lead','sources','services','statuses','users','activities'));
+
+        return view('leads.edit',compact('lead','sources','services','statuses','users','activities','callLogs'));
     }
     // Lead Güncelleme Post İşlemi
     public function update(Request $request)
