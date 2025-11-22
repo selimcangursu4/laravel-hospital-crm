@@ -19,6 +19,7 @@ Route::get('/leads/create', [LeadController::class,'create'])->name('leads.creat
 Route::get('/leads/status-list', [LeadController::class,'status'])->name('leads.status');
 Route::get('/leads/sources-list', [LeadController::class,'leadSources'])->name('leads.leadSources');
 Route::get('/leads/report', [LeadController::class,'miniReport'])->name('leads.miniReport');
+Route::post('/leads/assignment-update', [LeadController::class,'assignUserChange'])->name('lead.assign.user');
 
 
 Route::post('/leads/store', [LeadController::class,'store'])->name('leads.store');

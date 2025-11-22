@@ -274,12 +274,34 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        ...
+                        <form>
+                            @csrf
+                            <div class="mb-3" hidden>
+                                <label for="update_user_lead_id">Lead Id</label>
+                                <input type="text" id="update_user_lead_id" class="form-control"
+                                    value="{{ $lead->id }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_user_id">Personel Seçiniz</label>
+                                <select class="form-select mb-3" id="update_user_id">
+                                    <option selected>Seçiniz...</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_user_description">Açıklama</label>
+                                <textarea class="form-control" id="update_user_description" rows="5"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                <button type="button" id="updateLeadUserButton" class="btn btn-primary">Personeli
+                                    Ata</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                        <button type="button" class="btn btn-primary">Personeli Ata</button>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -440,7 +462,46 @@
                 })
             })
             // Lead Atanan Personeli Güncelle
+            $('#updateLeadUserButton').click(function(e) {
+                e.preventDefault();
 
+                let lead_id = $('#update_user_lead_id').val();
+                let user_id = $('#update_user_id').val();
+                let description = $('#update_user_description').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('lead.assign.user') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        lead_id: lead_id,
+                        user_id: user_id,
+                        description: description
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı!',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        $('#userAssignModal').modal('hide');
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: error.responseJSON?.message ??
+                                'Lead personel atama işlemi sırasında bir sorun oluştu.',
+                        });
+
+                        console.log(error);
+                    }
+                })
+
+
+            })
             // Dosya Eki Ekle
 
             // Arama Yap Log Kaydı

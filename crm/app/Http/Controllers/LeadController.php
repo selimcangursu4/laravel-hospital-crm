@@ -8,6 +8,7 @@ use App\Models\LeadStatus;
 use App\Models\Service;
 use App\Models\User;
 use App\Models\Lead;
+use App\Models\LeadAssignmentLog;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -153,7 +154,8 @@ class LeadController extends Controller
         $sources = LeadSource::all();
         $services = Service::all();
         $statuses = LeadStatus::all();
-        return view('leads.edit',compact('lead','sources','services','statuses'));
+        $users = User::all();
+        return view('leads.edit',compact('lead','sources','services','statuses','users'));
     }
     // Lead Güncelleme Post İşlemi
     public function update(Request $request)
@@ -210,6 +212,46 @@ class LeadController extends Controller
             'message' => 'Lead güncellenirken bir hata oluştu.',
         ], 500);
       }
+    }
+    // Lead Personel Atama Değişikliği
+    public function assignUserChange(Request $request)
+    {
+        try {
+            $lead_id = $request->input('lead_id');
+            $user_id = $request->input('user_id');
+            $description = $request->input('description');
+
+            $lead = Lead::find($lead_id);
+            if ($lead) {
+                $lead->user_id = $user_id;
+                $lead->save();
+            }
+
+            $leadAssignmentLog = new LeadAssignmentLog();
+            $leadAssignmentLog->lead_id = $lead_id;
+            $leadAssignmentLog->assigned_by =$lead->user_id;
+            $leadAssignmentLog->assigned_to = $user_id;
+            $leadAssignmentLog->description = $description;
+            $leadAssignmentLog->user_id = Auth::id() ?? 1;
+            $leadAssignmentLog->save();
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lead personel ataması başarıyla güncellendi.'
+            ]);
+
+        } catch (Exception $th) {
+            Log::error('Lead personel atama hatası: ' . $th->getMessage(), [
+                'request' => $request->all(),
+                'trace' => $th->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Lead personel ataması güncellenirken bir hata oluştu.',
+                'error' => $th->getMessage()
+            ]);
+        }
     }
 
 
