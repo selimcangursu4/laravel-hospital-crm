@@ -17,8 +17,6 @@ Route::get('/leads/edit/{id}', [LeadController::class,'edit'])->name('leads.edit
 Route::post('/leads/update', [LeadController::class,'update'])->name('leads.update');
 
 Route::get('/leads/create', [LeadController::class,'create'])->name('leads.create');
-Route::get('/leads/status-list', [LeadController::class,'status'])->name('leads.status');
-Route::get('/leads/sources-list', [LeadController::class,'leadSources'])->name('leads.leadSources');
 Route::get('/leads/report', [LeadController::class,'miniReport'])->name('leads.miniReport');
 Route::post('/leads/assignment-update', [LeadController::class,'assignUserChange'])->name('lead.assign.user');
 Route::post('/leads/file-upload', [LeadController::class,'leadFileUpload'])->name('leads.file.upload');

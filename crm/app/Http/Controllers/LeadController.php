@@ -10,10 +10,15 @@ use App\Models\Service;
 use App\Models\User;
 use App\Models\Lead;
 use App\Models\LeadAssignmentLog;
+use App\Models\LeadCallLog;
+use App\Models\SmsLog;
+
 use App\Models\LeadFile;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
 
 class LeadController extends Controller
 {
@@ -39,17 +44,46 @@ class LeadController extends Controller
         $services = Service::all();
         return view('leads.create',compact('sources','services'));
     }
-    // Lead Durumu Sayfası
-    public function status(){
-        return view('leads.lead-status');
-    }
-    // Lead Kaynakları Sayfası
-    public function leadSources(){
-        return view('leads.lead-source');
-    }
     // Mini Lead Rapor Sayfası
     public function miniReport(){
-        return view('leads.reports-leads');
+        $today = Carbon::today();
+
+        // Toplam Lead (bugün oluşturulan)
+        $totalLeadsToday = Lead::whereDate('created_at', $today)->count();
+        // Tamamlanan Lead (bugün durum tamamlandı olanlar)
+        $completedLeadsToday = Lead::whereDate('created_at', $today)
+        ->where('lead_status_id', "=" , 6)
+        ->count();
+        // Günlük Arama
+        $dailyCalls = LeadCallLog::whereDate('created_at', $today)->count();
+        // Günlük SMS
+        $dailySms = SmsLog::whereDate('created_at', $today)->count();
+        // Günlük Eklenen Dosya Ekleri
+        $dailyFiles = LeadFile::whereDate('created_at', $today)->count();
+        // Başarısız Lead (bugün durumu başarısız olanlar)
+        $failedLeads = Lead::whereDate('created_at', $today)
+                       ->where('lead_status_id', "=" , 7)
+                       ->count();
+        // Toplam Aktif Lead (durumu tamamlanmamış olanlar)
+        $activeLeads = Lead::where('lead_status_id', '!=', 6)->count();
+        // Günlük Ulaşılamayan Lead (durumu ulaşılamayan lead)
+        $dailyUnreachable = Lead::whereDate('updated_at', $today)
+                         ->where('lead_status_id', '=',8)
+                         ->count();
+
+
+        return view('leads.reports-leads',compact(
+            'totalLeadsToday',
+            'completedLeadsToday',
+            'dailyCalls',
+            'dailySms',
+            'dailyFiles',
+            'failedLeads',
+            'activeLeads',
+            'dailyUnreachable'
+        ));
+
+
     }
     // Lead Ekleme Post İşlemi
     public function store(Request $request)
