@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\SmsLogController;
 use App\Http\Controllers\LeadActivityController;
+use App\Http\Controllers\LeadCallLogController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -30,3 +31,6 @@ Route::post('/lead-activity/store',[LeadActivityController::class,'store'])->nam
 
 
 Route::post('/sms/store',[SmsLogController::class,'store'])->name('sms.store');
+
+
+Route::post('/lead/call-log', [LeadCallLogController::class, 'logOutgoingCall'])->name('lead.call.log');

@@ -5,7 +5,7 @@
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#smsSendModal">
                 Sms Gönder
             </button>
-            <button class="btn btn-info me-2">Arama Yap</button>
+            <button id="makeCallButton" class="btn btn-info me-2">Arama Yap</button>
             <button class="btn btn-success me-2">WhatsApp'tan Ulaş</button>
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 Bilgileri Düzenle
@@ -554,6 +554,48 @@
                 })
             })
             // Arama Yap Log Kaydı
+            $('#makeCallButton').click(function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Arama yapmak istediğinize emin misiniz?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet',
+                    cancelButtonText: 'Hayır'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let lead_id = {{ $lead->id }};
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{route('lead.call.log')}}',
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                lead_id: lead_id,
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Başarılı!',
+                                    text: response.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            },
+                            error: function(error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hata!',
+                                    text: error.responseJSON?.message ??
+                                        'Arama logu kaydedilemedi.',
+                                });
+                                console.log(error);
+                            }
+                        });
+                    }
+                });
+            });
+
 
             // Lead Silme İşlemi
 
