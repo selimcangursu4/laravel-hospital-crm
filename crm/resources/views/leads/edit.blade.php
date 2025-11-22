@@ -3,24 +3,29 @@
     <div class="container-fluid">
         <div class="mb-4">
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#smsSendModal">
-                Sms Gönder
+                <i data-feather="message-square" class="me-1"></i> Sms Gönder
             </button>
-            <button id="makeCallButton" class="btn btn-info me-2">Arama Yap</button>
-            <a href="https://wa.me/{{ $lead->phone }}?text=Merhaba Amerikan Estetik Hastanesinden Sizlere Ulaşıyorum" target="_blank" class="btn btn-success me-2">
-                WhatsApp'tan Ulaş
+            <button id="makeCallButton" class="btn btn-info me-2">
+                <i data-feather="phone" class="me-1"></i> Arama Yap
+            </button>
+            <a href="https://wa.me/{{ $lead->phone }}?text=Merhaba Amerikan Estetik Hastanesinden Sizlere Ulaşıyorum"
+                target="_blank" class="btn btn-success me-2">
+                <i data-feather="smartphone" class="me-1"></i> WhatsApp'tan Ulaş
             </a>
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                Bilgileri Düzenle
+                <i data-feather="edit" class="me-1"></i> Bilgileri Düzenle
             </button>
-            <button class="btn btn-danger me-2">Sil</button>
+            <button id="deleteLeadButton" class="btn btn-danger me-2" data-lead-id="{{ $lead->id }}">
+                <i data-feather="trash-2" class="me-1"></i> Sil
+            </button>
             <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#activityModal">
-                Aktivite Ekle
+                <i data-feather="plus-circle" class="me-1"></i> Aktivite Ekle
             </button>
             <button type="button" class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#userAssignModal">
-                Personel Ata
+                <i data-feather="user-plus" class="me-1"></i> Personel Ata
             </button>
             <button type="button" class="btn btn-dark me-2" data-bs-toggle="modal" data-bs-target="#fileAttachModal">
-                Dosya Eki Ekle
+                <i data-feather="paperclip" class="me-1"></i> Dosya Eki Ekle
             </button>
         </div>
         <div class="row">
@@ -598,6 +603,52 @@
                 });
             });
             // Lead Silme İşlemi
+            $('#deleteLeadButton').click(function(e) {
+                e.preventDefault();
+
+                let lead_id = $(this).data('lead-id');
+
+                Swal.fire({
+                    title: 'Silmek istediğinize emin misiniz?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet',
+                    cancelButtonText: 'Hayır'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route('lead.delete') }}',
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                lead_id: lead_id
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Başarılı!',
+                                    text: response.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = '/leads/index';
+                                });
+                            },
+
+                            error: function(error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hata!',
+                                    text: error.responseJSON?.message ??
+                                        'Lead silinemedi.'
+                                });
+                                console.log(error);
+                            }
+                        });
+                    }
+                });
+            });
+
 
 
         })

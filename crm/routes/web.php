@@ -22,7 +22,7 @@ Route::get('/leads/sources-list', [LeadController::class,'leadSources'])->name('
 Route::get('/leads/report', [LeadController::class,'miniReport'])->name('leads.miniReport');
 Route::post('/leads/assignment-update', [LeadController::class,'assignUserChange'])->name('lead.assign.user');
 Route::post('/leads/file-upload', [LeadController::class,'leadFileUpload'])->name('leads.file.upload');
-
+Route::post('/leads/delete', [LeadController::class, 'delete'])->name('lead.delete');
 Route::post('/leads/store', [LeadController::class,'store'])->name('leads.store');
 Route::get('/leads/fetch', [LeadController::class,'fetch'])->name('leads.fetch');
 

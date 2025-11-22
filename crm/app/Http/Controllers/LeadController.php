@@ -306,6 +306,39 @@ class LeadController extends Controller
         ], 500);
      }
     }
+    // Lead Silme İşlemi
+    public function delete(Request $request)
+    {
+        try {
+            $lead_id = $request->input('lead_id');
+            $lead = Lead::find($lead_id);
+            if ($lead) {
+                // İlgili dosyaları sil
+                $leadFiles = LeadFile::where('lead_id', $lead_id)->get();
+                foreach ($leadFiles as $file) {
+                    if (Storage::exists($file->file_path)) {
+                        Storage::delete($file->file_path);
+                    }
+                    $file->delete();
+                }
+                // Lead kaydını sil
+                $lead->delete();
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Lead başarıyla silindi.'
+            ]);
+        } catch (Exception $th) {
+            Log::error('Lead silme hatası: ' . $th->getMessage(), [
+                'request' => $request->all(),
+                'trace' => $th->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Lead silinirken bir hata oluştu: ' . $th->getMessage()
+            ], 500);
+        }
+    }
 
 
 
