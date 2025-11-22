@@ -100,11 +100,25 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                        <button type="button" class="btn btn-primary">Sms Gönder</button>
+                        <form>
+                            @csrf
+                            <div class="mb-3" hidden>
+                                <label for="sms_lead_id">Lead Id</label>
+                                <input type="text" id="sms_lead_id" class="form-control" value="{{ $lead->id }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="sms_phone">Telefom Numarası</label>
+                                <input type="text" id="sms_phone" class="form-control" value="{{ $lead->phone }}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="sms_message">Mesajınız</label>
+                                <textarea class="form-control" rows="5" id="sms_message" placeholder="Mesajınızı Giriniz..."></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                <button type="button" id="sendSmsButton" class="btn btn-primary">Sms Gönder</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -185,6 +199,51 @@
                 </div>
             </div>
         </div>
-
     </div>
+    <script>
+        $(document).ready(function() {
+            // Sms Gönderme İşlemi
+            $('#sendSmsButton').click(function(e) {
+                e.preventDefault();
+
+                let phone = $('#sms_phone').val();
+                let lead_id = $('#sms_lead_id').val();
+                let message = $('#sms_message').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('sms.store') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        phone: phone,
+                        lead_id: lead_id,
+                        message: message
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı!',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        $('#smsSendModal').modal('hide');
+                    },
+
+                    error: function(error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: error.responseJSON?.message ??
+                                'SMS gönderilirken bir sorun oluştu.',
+                        });
+
+                        console.log(error);
+                    }
+
+                })
+            })
+        })
+    </script>
 @endsection

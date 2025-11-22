@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\SmsLogController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -20,3 +21,9 @@ Route::get('/leads/report', [LeadController::class,'miniReport'])->name('leads.m
 
 Route::post('/leads/store', [LeadController::class,'store'])->name('leads.store');
 Route::get('/leads/fetch', [LeadController::class,'fetch'])->name('leads.fetch');
+
+
+
+
+
+Route::post('/sms/store',[SmsLogController::class,'store'])->name('sms.store');
