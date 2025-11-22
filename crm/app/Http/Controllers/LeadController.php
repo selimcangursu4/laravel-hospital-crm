@@ -194,9 +194,18 @@ class LeadController extends Controller
             ->where('lead_call_logs.lead_id', $id)
             ->orderBy('lead_call_logs.created_at', 'desc')
             ->get();
+            // Sms Log Kayıtlarını Getir
+            $smsLogs = DB::table('sms_logs')
+            ->leftJoin('users', 'sms_logs.user_id', '=', 'users.id')
+            ->select(
+            'sms_logs.*',
+            'users.name as called_by_name'
+             )
+            ->where('sms_logs.lead_id', $id)
+            ->orderBy('sms_logs.created_at', 'desc')
+            ->get();
 
-
-        return view('leads.edit',compact('lead','sources','services','statuses','users','activities','callLogs'));
+        return view('leads.edit',compact('lead','sources','services','statuses','users','activities','callLogs','smsLogs'));
     }
     // Lead Güncelleme Post İşlemi
     public function update(Request $request)

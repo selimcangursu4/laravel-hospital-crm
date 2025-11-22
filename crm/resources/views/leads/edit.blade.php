@@ -188,16 +188,41 @@
                             </table>
                         </div>
                     </div>
-
-
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title">Lead Sms Geçmişi</h5>
+                            <h5 class="card-title">Lead SMS Geçmişi</h5>
                         </div>
                         <div class="card-body">
-                            Test
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Mesaj</th>
+                                        <th>Durum</th>
+                                        <th>Kullanıcı</th>
+                                        <th>Tarih</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($smsLogs as $index => $log)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $log->message }}</td>
+                                            <td>{{ $log->status }}</td>
+                                            <td>{{ $log->called_by_name ?? '-' }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($log->created_at)->format('Y-m-d H:i') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">SMS geçmişi bulunamadı.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title">Lead Dosya Ekleri</h5>
@@ -243,7 +268,8 @@
                                 @csrf
                                 <div class="mb-3" hidden>
                                     <label for="sms_lead_id">Lead Id</label>
-                                    <input type="text" id="sms_lead_id" class="form-control" value="{{ $lead->id }}" />
+                                    <input type="text" id="sms_lead_id" class="form-control"
+                                        value="{{ $lead->id }}" />
                                 </div>
                                 <div class="mb-3">
                                     <label for="sms_phone">Telefom Numarası</label>
