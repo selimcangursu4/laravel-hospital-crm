@@ -72,7 +72,9 @@
                             <label class="form-label" for="service_id">Hizmet</label>
                             <select class="form-select" id="service_id" name="service_id">
                                 <option value="">Hizmet Seçiniz</option>
-                                <option value="1">Genel Muayene</option>
+                                @foreach ($services as $service)
+                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -80,7 +82,9 @@
                             <label class="form-label" for="source_id">Kaynak</label>
                             <select class="form-select" id="source_id" name="source_id">
                                 <option value="">Kaynak Seçiniz</option>
-                                <option value="1">Google</option>
+                                @foreach ($sources as $source)
+                                    <option value="{{ $source->id }}">{{ $source->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 

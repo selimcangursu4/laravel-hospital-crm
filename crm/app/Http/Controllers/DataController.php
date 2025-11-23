@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Exception;
 use App\Models\Patient;
+use App\Models\Service;
+use App\Models\LeadSource;
+use App\Models\PatientStatus;
+use App\Models\User;
+use App\Models\Doctor;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -15,11 +20,12 @@ class DataController extends Controller
     {
         return view('data.view');
     }
-
     // Yeni Hasta Ekleme Sayfası
     public function create()
     {
-        return view('data.create');
+        $services = Service::all();
+        $sources = LeadSource::all();
+        return view('data.create',compact('services','sources'));
     }
     // Yeni Hasta Kaydetme İşlemi
     public function store(Request $request)
@@ -66,22 +72,82 @@ class DataController extends Controller
             return response()->json(['success' => false, 'message' => 'Hasta Kaydedilirken Bir Hata Oluştu: ' . $th->getMessage()]);
         }
     }
-
     // Hasta Listeleme Sayfası
     public function index()
     {
-        return view('data.index');
-    }
+             $services = Service::all();
+             $sources  = LeadSource::all();
+             $statuses  = PatientStatus::all();
+             $users = User::all();
+             $doctors = Doctor::all();
 
+        return view('data.index', compact('services', 'sources','statuses','users','doctors'));
+    }
     // Hasta Detay Sayfası
     public function detail($id)
     {
         return view('data.detail');
     }
-
     // Hasta Mini Rapor Sayfası
     public function miniReport(){
         return view('data.reports-data');
     }
+    // Tüm Hastaları Getirme (Filtreli)
+    public function fetch(Request $request)
+    {
+       $query = Patient::select(
+        'patients.id',
+        'patients.fullname',
+        'patients.phone',
+        'patients.gender_id',
+        'services.name as service_name',
+        'lead_sources.name as source_name',
+        'patient_statues.name as status_name',
+        'users.name as user_name',
+        'doctors.name as doctor_name'
+       )
+       ->leftJoin('services', 'patients.service_id', '=', 'services.id')
+       ->leftJoin('lead_sources', 'patients.source_id', '=', 'lead_sources.id')
+       ->leftJoin('patient_statues', 'patients.patient_status_id', '=', 'patient_statues.id')
+       ->leftJoin('users', 'patients.user_id', '=', 'users.id')
+       ->leftJoin('users as doctors', 'patients.doctor_id', '=', 'doctors.id');
+
+       // Filtreleme
+       if ($request->search_id) {
+        $query->where('patients.id', $request->search_id);
+       }
+       if ($request->search_fullname) {
+        $query->where('patients.fullname', 'like', '%' . $request->search_fullname . '%');
+       }
+       if ($request->search_phone) {
+        $query->where('patients.phone', 'like', '%' . $request->search_phone . '%');
+       }
+       if ($request->search_gender_id) {
+        $query->where('patients.gender_id', $request->search_gender_id);
+       }
+       if ($request->search_service_id) {
+        $query->where('patients.service_id', $request->search_service_id);
+       }
+       if ($request->search_source_id) {
+        $query->where('patients.source_id', $request->search_source_id);
+       }
+       if ($request->search_patient_status_id) {
+        $query->where('patients.patient_status_id', $request->search_patient_status_id);
+       }
+       if ($request->search_user_id) {
+        $query->where('patients.user_id', $request->search_user_id);
+       }
+       if ($request->search_doctor_id) {
+        $query->where('patients.doctor_id', $request->search_doctor_id);
+       }
+
+       return response()->json($query->get());
+    }
+    // Hasta Edit Sayfası
+    public function edit($id)
+    {
+        return view('data.edit');
+    }
+
 
 }

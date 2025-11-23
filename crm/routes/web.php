@@ -32,6 +32,8 @@ Route::post('/lead/call-log', [LeadCallLogController::class, 'logOutgoingCall'])
 // Data (Hasta) Routes
 Route::get('/data/view', [DataController::class,'view'])->name('data.view');
 Route::get('/data/create', [DataController::class,'create'])->name('data.create');
+Route::get('/data/fetch', [DataController::class,'fetch'])->name('data.fetch');
+Route::get('/data/edit/{id}', [DataController::class,'edit'])->name('data.edit');
 Route::post('/data/store', [DataController::class,'store'])->name('data.store');
 Route::get('/data/index', [DataController::class,'index'])->name('data.index');
 Route::get('/data/detail/{id}', [DataController::class,'detail'])->name('data.detail');

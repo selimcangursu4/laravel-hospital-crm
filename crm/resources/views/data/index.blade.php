@@ -126,14 +126,13 @@
 
 </div>
 
-
 <script>
 $(document).ready(function() {
     let table = new DataTable('#myTable');
 
     function loadPatients() {
         $.ajax({
-            url: "{{ route('patients.fetch') }}",
+            url: "{{ route('data.fetch') }}",
             type: "GET",
             data: {
                 search_id: $('#search_id').val(),
@@ -148,13 +147,13 @@ $(document).ready(function() {
             },
             success: function(data) {
                 table.clear();
+
                 data.forEach(function(patient) {
 
-                    let genderName = patient.gender_name ?? (
+                    let genderName =
                         patient.gender_id == 1 ? 'Erkek' :
                         patient.gender_id == 2 ? 'Kadın' :
-                        'Belirtilmedi'
-                    );
+                        'Belirtilmedi';
 
                     table.row.add([
                         patient.id,
@@ -166,7 +165,7 @@ $(document).ready(function() {
                         patient.status_name ?? '-',
                         patient.user_name ?? '-',
                         patient.doctor_name ?? '-',
-                        `<a href="/patients/edit/${patient.id}" class="btn btn-sm btn-primary">Detay</a>`
+                        `<a href="/data/edit/${patient.id}" class="btn btn-sm btn-primary">Detay</a>`
                     ]).draw();
                 });
             },
@@ -185,5 +184,6 @@ $(document).ready(function() {
 
 });
 </script>
+
 
 @endsection
