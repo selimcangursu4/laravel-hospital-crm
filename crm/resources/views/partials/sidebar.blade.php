@@ -17,7 +17,7 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-profile.html">
+                <a class="sidebar-link" href="{{route('data.view')}}">
                     <i class="align-middle" data-feather="users"></i>
                     <span class="align-middle">Hasta Yönetimi</span>
                 </a>

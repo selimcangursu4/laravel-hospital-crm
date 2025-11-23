@@ -5,12 +5,12 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\SmsLogController;
 use App\Http\Controllers\LeadActivityController;
 use App\Http\Controllers\LeadCallLogController;
+use App\Http\Controllers\DataController;
 
 Route::get('/', function () {
     return view('dashboard');
 });
-
-
+// Lead Routes
 Route::get('/leads/view', [LeadController::class,'view'])->name('leads.view');
 Route::get('/leads/index', [LeadController::class,'index'])->name('leads.index');
 Route::get('/leads/edit/{id}', [LeadController::class,'edit'])->name('leads.edit');
@@ -23,9 +23,16 @@ Route::post('/leads/delete', [LeadController::class, 'delete'])->name('lead.dele
 Route::post('/leads/store', [LeadController::class,'store'])->name('leads.store');
 Route::get('/leads/fetch', [LeadController::class,'fetch'])->name('leads.fetch');
 Route::get('/lead/file/download/{id}', [LeadController::class, 'download'])->name('lead.file.download');
-
+// Lead Aktivity Routes
 Route::post('/lead-activity/store',[LeadActivityController::class,'store'])->name('lead.activity.store');
-
+// SMS Log Routes
 Route::post('/sms/store',[SmsLogController::class,'store'])->name('sms.store');
-
+// Lead Call Log Routes
 Route::post('/lead/call-log', [LeadCallLogController::class, 'logOutgoingCall'])->name('lead.call.log');
+// Data (Hasta) Routes
+Route::get('/data/view', [DataController::class,'view'])->name('data.view');
+Route::get('/data/create', [DataController::class,'create'])->name('data.create');
+Route::post('/data/store', [DataController::class,'store'])->name('data.store');
+Route::get('/data/index', [DataController::class,'index'])->name('data.index');
+Route::get('/data/detail/{id}', [DataController::class,'detail'])->name('data.detail');
+Route::get('/data/report', [DataController::class,'miniReport'])->name('data.miniReport');
