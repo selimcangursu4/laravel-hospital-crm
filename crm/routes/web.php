@@ -38,6 +38,8 @@ Route::get('/data/create', [DataController::class,'create'])->name('data.create'
 Route::get('/data/fetch', [DataController::class,'fetch'])->name('data.fetch');
 Route::get('/data/edit/{id}', [DataController::class,'edit'])->name('data.edit');
 Route::post('/data/store', [DataController::class,'store'])->name('data.store');
+Route::post('/data/update', [DataController::class,'update'])->name('data.update');
+
 Route::get('/data/index', [DataController::class,'index'])->name('data.index');
 Route::get('/data/detail/{id}', [DataController::class,'detail'])->name('data.detail');
 Route::get('/data/report', [DataController::class,'miniReport'])->name('data.miniReport');

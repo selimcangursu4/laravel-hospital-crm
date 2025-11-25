@@ -268,48 +268,120 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editPatientModalLabel"><i class="fas fa-edit me-1"></i> Hasta Bilgilerini Düzenle</h5>
+        <h5 class="modal-title" id="editPatientModalLabel">
+          <i class="fas fa-edit me-1"></i> Hasta Bilgilerini Düzenle
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
       </div>
       <div class="modal-body">
         <form>
-            @csrf
-          <div class="mb-3">
-            <label for="editPatientName" class="form-label">Ad Soyad</label>
-            <input type="text" class="form-control" id="editPatientName" value="Selim Can Gürsu">
+          @csrf
+          <input type="hidden" id="editPatientId" value="{{ $patient->id }}">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Ad Soyad</label>
+              <input type="text" class="form-control" id="editPatientName" value="{{ $patient->fullname }}">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="editPatientEmail" value="{{ $patient->email }}">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Telefon</label>
+              <input type="text" class="form-control" id="editPatientPhone" value="{{ $patient->phone }}">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Doğum Tarihi</label>
+              <input type="date" class="form-control" id="editPatientBirth" value="{{ $patient->birth_date }}">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Cinsiyet</label>
+              <select class="form-select" id="editPatientGender">
+                <option value="">Seçiniz</option>
+                <option value="1" {{ $patient->gender_id == 1 ? 'selected' : '' }}>Erkek</option>
+                <option value="2" {{ $patient->gender_id == 2 ? 'selected' : '' }}>Kadın</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Kan Grubu</label>
+              <input type="text" class="form-control" id="editPatientBlood" value="{{ $patient->blood_type }}">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Boy (cm)</label>
+              <input type="text" class="form-control" id="editPatientHeight" value="{{ $patient->height }}">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Kilo (kg)</label>
+              <input type="text" class="form-control" id="editPatientWeight" value="{{ $patient->weight }}">
+            </div>
+            <div class="col-md-6 mb-3">
+             <label class="form-label">Ülke</label>
+             <select class="form-select" id="editPatientCountry">
+               <option value="1" {{ $patient->country_id == '1' ? 'selected' : '' }}>Türkiye</option>
+               <option value="2" {{ $patient->country_id == '2' ? 'selected' : '' }}>Amerika</option>
+               <option value="3" {{ $patient->country_id == '3' ? 'selected' : '' }}>Almanya</option>
+               <option value="4" {{ $patient->country_id == '4' ? 'selected' : '' }}>Fransa</option>
+             </select>
+            </div>
+            <div class="col-md-6 mb-3">
+             <label class="form-label">Şehir</label>
+             <select class="form-select" id="editPatientCity">
+               <option value="1" {{ $patient->city_id == '1' ? 'selected' : '' }}>İstanbul</option>
+               <option value="2" {{ $patient->city_id == '2' ? 'selected' : '' }}>Ankara</option>
+               <option value="3" {{ $patient->city_id == '3' ? 'selected' : '' }}>İzmir</option>
+               <option value="4" {{ $patient->city_id == '4' ? 'selected' : '' }}>Bursa</option>
+              </select>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="form-label">Adres</label>
+              <textarea class="form-control" id="editPatientAddress" rows="2">{{ $patient->address }}</textarea>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Alınan Hizmet</label>
+              <select class="form-select" id="editPatientService">
+                @foreach($services as $service)
+                  <option value="{{ $service->id }}" {{ $service->id == $patient->service_id ? 'selected' : '' }}>
+                    {{ $service->name }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Doktor</label>
+              <select class="form-select" id="editPatientDoctor">
+                @foreach($doctors as $doctor)
+                  <option value="{{ $doctor->id }}" {{ $doctor->id == $patient->doctor_id ? 'selected' : '' }}>
+                    {{ $doctor->fullname }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Durum</label>
+              <select class="form-select" id="editPatientStatus">
+                <option value="">Seçiniz</option>
+                <option value="1" {{ $patient->patient_status_id == 1 ? 'selected' : '' }}>Yeni Başvuru</option>
+                <option value="2" {{ $patient->patient_status_id == 2 ? 'selected' : '' }}>Görüşme Yapıldı</option>
+                <option value="3" {{ $patient->patient_status_id == 3 ? 'selected' : '' }}>Tedavi Başladı</option>
+                <option value="4" {{ $patient->patient_status_id == 4 ? 'selected' : '' }}>Tamamlandı</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Acil Durum Yakını</label>
+              <input type="text" class="form-control" id="editEmergencyName" value="{{ $patient->emergency_contact_name }}">
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="editPatientPhone" class="form-label">Telefon</label>
-            <input type="text" class="form-control" id="editPatientPhone" value="0555 123 45 67">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">İptal</button>
+            <button type="button" id="patientUpdateSave" class="btn btn-secondary">Kaydet</button>
           </div>
-          <div class="mb-3">
-            <label for="editPatientEmail" class="form-label">Email</label>
-            <input type="email" class="form-control" id="editPatientEmail" value="selim.gursu@example.com">
-          </div>
-          <div class="mb-3">
-            <label for="editPatientBirth" class="form-label">Doğum Tarihi</label>
-            <input type="date" class="form-control" id="editPatientBirth" value="1990-03-12">
-          </div>
-          <div class="mb-3">
-            <label for="editPatientStatus" class="form-label">Durum</label>
-            <select class="form-select" id="editPatientStatus">
-              <option value="yeni" selected>Yeni Hasta</option>
-              <option value="tedaviBasladi">Tedavi Başladı</option>
-              <option value="tedaviDevam">Tedavi Devam Ediyor</option>
-              <option value="tamamlandi">Tamamlandı</option>
-            </select>
-          </div>
-         <div class="modal-footer">
-           <button type="button" class="btn btn-light" data-bs-dismiss="modal">İptal</button>
-           <button type="button" class="btn btn-secondary" onclick="updatePatient()">Kaydet</button>
-         </div>
         </form>
       </div>
-
- 
     </div>
   </div>
 </div>
+
+
 <!-- Doktor Ata Modal -->
 <div class="modal fade" id="assignDoctorModal" tabindex="-1" aria-labelledby="assignDoctorModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -348,6 +420,7 @@
   </div>
 </div>
 
+<!-- Ameliyat Randevusu Ayarla Modal -->
 <div class="modal fade" id="surgeryModal" tabindex="-1" aria-labelledby="surgeryModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -539,8 +612,80 @@ $(document).ready(function(){
             });
         }
     });
-    // 
+    });
+       // Hasta Bilgilerini Güncelle
+    $('#patientUpdateSave').click(function(e){
+      e.preventDefault();
+
+      let id = $('#editPatientId').val();
+      let fullname = $('#editPatientName').val();
+      let email = $('#editPatientEmail').val();
+      let phone = $('#editPatientPhone').val();
+      let birth_date = $('#editPatientBirth').val();
+      let gender_id = $('#editPatientGender').val();
+      let blood_type = $('#editPatientBlood').val();
+      let height = $('#editPatientHeight').val();
+      let weight = $('#editPatientWeight').val();
+      let country_id = $('#editPatientCountry').val();
+      let city_id = $('#editPatientCity').val();
+      let address = $('#editPatientAddress').val();
+      let service_id = $('#editPatientService').val();
+      let doctor_id = $('#editPatientDoctor').val();
+      let patient_status_id = $('#editPatientStatus').val();
+      let emergency_contact_name = $('#editEmergencyName').val();
+      let _token = "{{ csrf_token() }}";
+
+      $.ajax({
+        type: "POST",
+        url: "{{route('data.update')}}",
+        data: {
+          id: id,
+          fullname: fullname,
+          email: email,
+          phone: phone,
+          birth_date: birth_date,
+          gender_id: gender_id,
+          blood_type: blood_type,
+          height: height,
+          weight: weight,
+          country_id: country_id,
+          city_id: city_id,
+          address: address,
+          service_id: service_id,
+          doctor_id: doctor_id,
+          patient_status_id: patient_status_id,
+          emergency_contact_name: emergency_contact_name,
+          _token: _token
+        },
+        success: function(response) {
+            if(response.success){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Başarılı',
+                    text: response.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                $('#editPatientModal').modal('hide');
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Uyarı',
+                    text: response.message,
+                });
+            }
+        },
+        error: function(xhr){
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata oluştu',
+                text: xhr.responseJSON?.message ?? "Sunucu hatası"
+            });
+        }
+    });
 });
+
+
 
 });
 
