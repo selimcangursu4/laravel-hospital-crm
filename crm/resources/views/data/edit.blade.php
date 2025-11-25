@@ -5,6 +5,9 @@
   <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#processModal">
     <i class="fas fa-plus me-1"></i> İşlem Ekle
   </button>
+    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#">
+    <i class="fas fa-plus me-1"></i> Ameliyat Randevusu Ekle
+  </button>
   <button class="btn btn-info">
     <i class="fas fa-phone me-1"></i> Arama Yap </button>
   <button class="btn btn-warning">
@@ -215,35 +218,43 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
       </div>
       <div class="modal-body">
-        <form id="processForm">
+        <form>
+             <div class="mb-3" hidden>
+            <label for="patientId" class="form-label">Hasta Id</label>
+            <input type="input" class="form-control" id="processPatientId" value="{{$patient->id}}">
+          </div>
           <div class="mb-3">
             <label for="processName" class="form-label">İşlem Adı</label>
-            <input type="text" class="form-control" id="processName" placeholder="Örn: Botoks Uygulaması">
+             <select class="form-select" id="processServiceId">
+              <option value="">Seçiniz</option>
+              @foreach($services as $service)
+                 <option value="{{$service->id}}">{{$service->name}}</option>
+              @endforeach
+            </select>
           </div>
           <div class="mb-3">
             <label for="processDoctor" class="form-label">Doktor</label>
             <select class="form-select" id="processDoctor">
               <option value="">Seçiniz</option>
-              <option>Dr. Selim Can Gürsu</option>
-              <option>Dr. Ahmet Yılmaz</option>
-              <option>Dr. Merve Şimşek</option>
+               @foreach($doctors as $doctor)
+                 <option value="{{$doctor->id}}">{{$doctor->fullname}}</option>
+              @endforeach
             </select>
           </div>
           <div class="mb-3">
-            <label for="processDate" class="form-label">Tarih</label>
-            <input type="date" class="form-control" id="processDate">
+            <label for="processDescription" class="form-label">Açıklama</label>
+            <textarea type="input" class="form-control" rows="10" id="processDescription" value="{{$patient->id}}"></textarea>
           </div>
           <div class="mb-3">
             <label for="processStatus" class="form-label">Durum</label>
             <select class="form-select" id="processStatus">
-              <option value="planlandi">Planlandı</option>
-              <option value="devamEdiyor">Devam Ediyor</option>
-              <option value="tamamlandi">Tamamlandı</option>
+              <option value="1">Rutin Kontrol</option>
+              <option value="2">Tamamlandı</option>
             </select>
           </div>
          <div class="modal-footer">
            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-           <button type="button" class="btn btn-success" onclick="addProcess()">Kaydet</button>
+           <button type="button" id="processSave" class="btn btn-success">Kaydet</button>
          </div>
         </form>
       </div>
@@ -346,6 +357,7 @@ $(document).ready(function(){
         }
     });
 
+    // Sms Gönder
     $('#smsSendSave').click(function(e){
         e.preventDefault();
 
@@ -369,6 +381,55 @@ $(document).ready(function(){
             }
         });
     });
+    // Servis Ekle
+ $('#processSave').click(function(e){
+        e.preventDefault();
+
+        let processPatientId = $('#processPatientId').val();
+        let processServiceId = $('#processServiceId').val();
+        let processDoctor = $('#processDoctor').val();
+        let processDescription = $('#processDescription').val();
+        let processStatus = $('#processStatus').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('process.store') }}", // Laravel route
+            data: {
+                processPatientId: processPatientId,
+                processServiceId: processServiceId,
+                processDoctor: processDoctor,
+                processDescription: processDescription,
+                processStatus: processStatus
+            },
+           success: function(response) {
+    if(response.success){
+        Swal.fire({
+            icon: 'success',
+            title: 'Başarılı!',
+            text: response.message,
+            timer: 2000,
+            showConfirmButton: false
+        });
+        // Formu sıfırlamak istersen
+        $('#processForm')[0].reset();
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hata!',
+            text: response.message
+        });
+    }
+},
+error: function(xhr){
+    Swal.fire({
+        icon: 'error',
+        title: 'Sunucu Hatası!',
+        text: xhr.status + ' ' + xhr.statusText
+    });
+}
+        });
+    });
+
 });
 
 

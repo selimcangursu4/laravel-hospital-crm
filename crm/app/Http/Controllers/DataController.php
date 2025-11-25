@@ -147,8 +147,10 @@ class DataController extends Controller
     public function edit($id)
     {
         $patient = Patient::find($id)->first();
+        $services = Service::all();
+        $doctors = Doctor::all();
 
-        return view('data.edit',compact('patient'));
+        return view('data.edit',compact('patient','services','doctors'));
     }
 
 

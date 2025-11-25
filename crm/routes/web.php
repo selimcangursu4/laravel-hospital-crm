@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\SmsLogController;
 use App\Http\Controllers\LeadActivityController;
+use App\Http\Controllers\ProcessLogController;
 use App\Http\Controllers\LeadCallLogController;
 use App\Http\Controllers\DataController;
 
@@ -39,3 +40,5 @@ Route::post('/data/store', [DataController::class,'store'])->name('data.store');
 Route::get('/data/index', [DataController::class,'index'])->name('data.index');
 Route::get('/data/detail/{id}', [DataController::class,'detail'])->name('data.detail');
 Route::get('/data/report', [DataController::class,'miniReport'])->name('data.miniReport');
+// Data İşlem Rotaları
+Route::post('/data/process/store', [ProcessLogController::class,'store'])->name('process.store');
