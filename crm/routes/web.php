@@ -43,7 +43,7 @@ Route::post('/data/update', [DataController::class,'update'])->name('data.update
 Route::get('/data/index', [DataController::class,'index'])->name('data.index');
 Route::get('/data/detail/{id}', [DataController::class,'detail'])->name('data.detail');
 Route::get('/data/report', [DataController::class,'miniReport'])->name('data.miniReport');
-
+Route::post('/data/delete', [DataController::class, 'delete'])->name('data.delete');
 // Data İşlem Rotaları
 Route::post('/data/process/store', [ProcessLogController::class,'store'])->name('process.store');
 Route::post('/data/operation/store', [SurgeryAppointmentController::class,'store'])->name('operation.store');

@@ -154,6 +154,7 @@ class DataController extends Controller
 
         return view('data.edit', compact('patient', 'services', 'doctors'));
     }
+    // Hasta Bilgilerini Güncelle
     public function update(Request $request)
     {
         try {
@@ -208,6 +209,39 @@ class DataController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Bir hata oluştu: ' . $th->getMessage()
+            ], 500);
+        }
+    }
+    // Hasta Sil
+      public function delete(Request $request)
+    {
+        try {
+            $deleteId = $request->input('deleteId');
+            $patient = Patient::find($deleteId);
+            if ($patient) {
+                // İlgili dosyaları sil
+                $patientFiles = LeadFile::where('lead_id', $deleteId)->get();
+                foreach ($patientFiles as $file) {
+                    if (Storage::exists($file->file_path)) {
+                        Storage::delete($file->file_path);
+                    }
+                    $file->delete();
+                }
+                // Lead kaydını sil
+                $patient->delete();
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Lead başarıyla silindi.'
+            ]);
+        } catch (Exception $th) {
+            Log::error('Lead silme hatası: ' . $th->getMessage(), [
+                'request' => $request->all(),
+                'trace' => $th->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Lead silinirken bir hata oluştu: ' . $th->getMessage()
             ], 500);
         }
     }

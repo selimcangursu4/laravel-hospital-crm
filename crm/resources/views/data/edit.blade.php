@@ -18,7 +18,7 @@
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editPatientModal">
             <i class="fas fa-edit me-1"></i> Bilgileri Düzenle
         </button>
-        <button class="btn btn-danger">
+        <button class="btn btn-danger" id="deletePatient">
             <i class="fas fa-trash-alt me-1"></i> Sil </button>
     </div>
     <div class="row">
@@ -678,6 +678,47 @@
             });
 
             // Silme
+            $('#deletePatient').click(function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: "Bu hastayı silmek istediğinize emin misiniz?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet, Sil',
+                    cancelButtonText: 'Vazgeç',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        let deleteId = "{{ $patient->id }}";
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('data.delete') }}",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                deleteId: deleteId
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Başarılı!',
+                                    'Silme işlemi başarılı.',
+                                    'success'
+                                );
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Hata!',
+                                    'İşlem sırasında bir sorun oluştu.',
+                                    'error'
+                                );
+                            }
+                        });
+
+                    }
+                });
+            })
 
             // Arama Yap
             $(document).on('click', '#callButton', function(e) {
@@ -697,7 +738,7 @@
                         let patientId = "{{ $patient->id }}";
                         $.ajax({
                             type: "POST",
-                            url: "{{route('patient.call.log')}}",
+                            url: "{{ route('patient.call.log') }}",
                             data: {
                                 _token: "{{ csrf_token() }}",
                                 patientId: patientId
