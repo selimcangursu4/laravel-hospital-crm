@@ -683,15 +683,12 @@ $(document).ready(function(){
             });
         }
     });
+    });
     // Doktor Atama
 
     // Silme
 
     // Arama Yap
-
-    
-});
-
 
 
 });
