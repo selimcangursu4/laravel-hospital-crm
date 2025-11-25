@@ -146,7 +146,9 @@ class DataController extends Controller
     // Hasta Edit Sayfası
     public function edit($id)
     {
-        return view('data.edit');
+        $patient = Patient::find($id)->first();
+
+        return view('data.edit',compact('patient'));
     }
 
 

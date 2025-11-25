@@ -27,7 +27,7 @@ class LeadActivityController extends Controller
             $newActivity->save();
 
             // Lead Başarılı Kapatma İse Hasta Olarak Otomatik Ekle
-            if($lead_status_id == 6)
+            if($lead_status_id == 5)
             {
                 $lead = Lead::find($lead_id);
                 if($lead)
