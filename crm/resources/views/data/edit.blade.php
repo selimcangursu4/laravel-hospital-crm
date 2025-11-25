@@ -5,9 +5,9 @@
   <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#processModal">
     <i class="fas fa-plus me-1"></i> İşlem Ekle
   </button>
-    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#">
+<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#surgeryModal">
     <i class="fas fa-plus me-1"></i> Ameliyat Randevusu Ekle
-  </button>
+</button>
   <button class="btn btn-info">
     <i class="fas fa-phone me-1"></i> Arama Yap </button>
   <button class="btn btn-warning">
@@ -347,6 +347,77 @@
   </div>
 </div>
 
+<div class="modal fade" id="surgeryModal" tabindex="-1" aria-labelledby="surgeryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="surgeryModalLabel">Ameliyat Randevusu Ekle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+      </div>
+      <div class="modal-body">
+        <form id="surgeryForm">
+          <input type="hidden" id="operationPatientId" value="{{ $patient->id }}">
+
+          <div class="mb-3">
+            <label class="form-label">Randevu Tarihi *</label>
+            <input type="datetime-local" class="form-control" id="scheduledAt" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Yapılacak İşlem *</label>
+            <select class="form-select" id="surgeryTypeId" required>
+              <option selected disabled>Seçiniz</option>
+              @foreach($services as $service)
+                <option value="{{ $service->id }}">{{ $service->name }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Atanan Doktor *</label>
+            <select class="form-select" id="doctor_id" required>
+              <option selected disabled>Seçiniz</option>
+              @foreach($doctors as $doctor)
+                <option value="{{ $doctor->id }}">{{ $doctor->fullname }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Ameliyat Odası *</label>
+            <select class="form-select" id="operationRoomId" required>
+              <option selected disabled>Seçiniz</option>
+              @for($i = 1; $i <= 10; $i++)
+                <option value="{{ $i }}">Ameliyat Odası {{ $i }}</option>
+              @endfor
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Durum *</label>
+            <select class="form-select" id="statusId" required>
+              <option selected disabled>Seçiniz</option>
+              <option value="1">Beklemede</option>
+              <option value="2">Onaylandı</option>
+              <option value="3">Tamamlandı</option>
+              <option value="4">İptal Edildi</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Notlar</label>
+            <textarea class="form-control" id="notes" rows="3"></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-dark" id="saveSurgeryBtn">Kaydet</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script>
@@ -356,7 +427,6 @@ $(document).ready(function(){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-
     // Sms Gönder
     $('#smsSendSave').click(function(e){
         e.preventDefault();
@@ -382,7 +452,7 @@ $(document).ready(function(){
         });
     });
     // Servis Ekle
- $('#processSave').click(function(e){
+    $('#processSave').click(function(e){
         e.preventDefault();
 
         let processPatientId = $('#processPatientId').val();
@@ -402,33 +472,73 @@ $(document).ready(function(){
                 processStatus: processStatus
             },
            success: function(response) {
-    if(response.success){
-        Swal.fire({
+           if(response.success){
+            Swal.fire({
             icon: 'success',
             title: 'Başarılı!',
             text: response.message,
             timer: 2000,
             showConfirmButton: false
-        });
-        // Formu sıfırlamak istersen
-        $('#processForm')[0].reset();
-    } else {
-        Swal.fire({
+           });
+            // Formu sıfırlamak istersen
+            $('#processForm')[0].reset();
+           } else {
+            Swal.fire({
             icon: 'error',
             title: 'Hata!',
             text: response.message
+            });
+          }
+         },
+         error: function(xhr){
+          Swal.fire({
+           icon: 'error',
+           title: 'Sunucu Hatası!',
+           text: xhr.status + ' ' + xhr.statusText
+          });  
+          }
         });
-    }
-},
-error: function(xhr){
-    Swal.fire({
-        icon: 'error',
-        title: 'Sunucu Hatası!',
-        text: xhr.status + ' ' + xhr.statusText
     });
-}
-        });
+    // Ameliyat Randevusu Ayarla
+    $('#saveSurgeryBtn').click(function(e){
+    e.preventDefault();
+
+    $.ajax({
+        type:"POST",
+        url:"{{ route('operation.store') }}",
+        data:{
+            operationPatientId: $('#operationPatientId').val(),
+            scheduledAt: $('#scheduledAt').val(),
+            surgeryTypeId: $('#surgeryTypeId').val(),
+            doctor_id: $('#doctor_id').val(),
+            operationRoomId: $('#operationRoomId').val(),
+            statusId: $('#statusId').val(),
+            notes: $('#notes').val(),
+            _token: "{{ csrf_token() }}"
+        },
+        success:function(response){
+            if(response.success){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Başarılı!',
+                    text: response.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                $('#surgeryForm')[0].reset();
+                $('#surgeryModal').modal('hide');
+            }
+        },
+        error:function(xhr){
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata!',
+                text: xhr.responseJSON?.message ?? "Sunucu hatası"
+            });
+        }
     });
+});
 
 });
 
