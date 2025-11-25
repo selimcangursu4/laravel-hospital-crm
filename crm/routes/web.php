@@ -6,6 +6,7 @@ use App\Http\Controllers\SmsLogController;
 use App\Http\Controllers\LeadActivityController;
 use App\Http\Controllers\ProcessLogController;
 use App\Http\Controllers\LeadCallLogController;
+use App\Http\Controllers\PatientCallLogController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\SurgeryAppointmentController;
 
@@ -39,11 +40,13 @@ Route::get('/data/fetch', [DataController::class,'fetch'])->name('data.fetch');
 Route::get('/data/edit/{id}', [DataController::class,'edit'])->name('data.edit');
 Route::post('/data/store', [DataController::class,'store'])->name('data.store');
 Route::post('/data/update', [DataController::class,'update'])->name('data.update');
-
 Route::get('/data/index', [DataController::class,'index'])->name('data.index');
 Route::get('/data/detail/{id}', [DataController::class,'detail'])->name('data.detail');
 Route::get('/data/report', [DataController::class,'miniReport'])->name('data.miniReport');
+
 // Data İşlem Rotaları
 Route::post('/data/process/store', [ProcessLogController::class,'store'])->name('process.store');
-
 Route::post('/data/operation/store', [SurgeryAppointmentController::class,'store'])->name('operation.store');
+
+// Data Call Log Routes
+Route::post('/patient/call-log', [PatientCallLogController::class, 'logOutgoingCall'])->name('patient.call.log');
