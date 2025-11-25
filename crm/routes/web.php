@@ -27,6 +27,7 @@ Route::get('/lead/file/download/{id}', [LeadController::class, 'download'])->nam
 Route::post('/lead-activity/store',[LeadActivityController::class,'store'])->name('lead.activity.store');
 // SMS Log Routes
 Route::post('/sms/store',[SmsLogController::class,'store'])->name('sms.store');
+Route::post('/sms/patient-store',[SmsLogController::class,'patientSmsStore'])->name('sms.patient.store');
 // Lead Call Log Routes
 Route::post('/lead/call-log', [LeadCallLogController::class, 'logOutgoingCall'])->name('lead.call.log');
 // Data (Hasta) Routes

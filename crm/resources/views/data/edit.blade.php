@@ -190,7 +190,7 @@
           </div>
           <div class="mb-3">
             <label for="recipientPhone" class="form-label">Telefon Numarası</label>
-            <input type="text" class="form-control" id="recipientPhone" placeholder="0555 123 45 67">
+            <input type="text" class="form-control" id="smsPhone" value="{{$patient->phone}}">
           </div>
           <div class="mb-3">
             <label for="smsMessage" class="form-label">Mesaj</label>
@@ -198,7 +198,7 @@
           </div>
              <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-        <button type="button" class="btn btn-primary" onclick="sendSMS()">Gönder</button>
+        <button type="button" id="smsSendSave" class="btn btn-primary">Gönder</button>
       </div>
         </form>
       </div>
@@ -340,8 +340,37 @@
 
 <script>
 $(document).ready(function(){
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
-})
+    $('#smsSendSave').click(function(e){
+        e.preventDefault();
+
+        let dataId = $('#smsDataId').val();
+        let smsPhone = $('#smsPhone').val();
+        let smsMessage = $('#smsMessage').val();
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('sms.patient.store') }}",
+            data: {
+                dataId: dataId,
+                smsPhone: smsPhone,
+                smsMessage: smsMessage
+            },
+            success: function(response){
+                alert(response.message);
+            },
+            error: function(xhr){
+                alert("Hata: " + xhr.status + " " + xhr.statusText);
+            }
+        });
+    });
+});
+
 
 </script>
 @endsection
