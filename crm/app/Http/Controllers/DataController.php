@@ -12,7 +12,7 @@ use App\Models\User;
 use App\Models\Doctor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB;
 
 
 class DataController extends Controller
@@ -148,7 +148,22 @@ class DataController extends Controller
     // Hasta Edit Sayfası
     public function edit($id)
     {
-        $patient = Patient::find($id)->first();
+       $patient = DB::table('patients')
+    ->leftJoin('services', 'patients.service_id', '=', 'services.id')
+    ->leftJoin('patient_statues', 'patients.patient_status_id', '=', 'patient_statues.id')
+    ->leftJoin('users', 'patients.user_id', '=', 'users.id')
+    ->leftJoin('doctors', 'patients.doctor_id', '=', 'doctors.id')
+
+    ->select(
+        'patients.*',
+        'services.name as service_name',
+        'patient_statues.name as status_name',
+        'users.name as user_name',
+        'doctors.fullname as doctor_name',
+
+    )
+    ->where('patients.id', $id)
+    ->first();
         $services = Service::all();
         $doctors = Doctor::all();
 

@@ -29,24 +29,39 @@
                         <i class="fas fa-user me-1"></i> Hasta Bilgileri
                     </h5>
                 </div>
-                <div class="card-body">
-                    <p>
-                        <strong>Ad Soyad:</strong> Selim Can Gürsu
-                    </p>
-                    <p>
-                        <strong>Telefon:</strong> 0555 123 45 67
-                    </p>
-                    <p>
-                        <strong>Email:</strong> selim.gursu@example.com
-                    </p>
-                    <p>
-                        <strong>Doğum Tarihi:</strong> 12.03.1990
-                    </p>
-                    <p>
-                        <strong>Durum:</strong> Tedavi Devam Ediyor
-                    </p>
-                </div>
+         <div class="card-body">
+    <p><strong>Ad Soyad:</strong> {{ $patient->fullname ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Telefon:</strong> {{ $patient->phone ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Email:</strong> {{ $patient->email ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Doğum Tarihi:</strong> {{ $patient->birth_date ? \Carbon\Carbon::parse($patient->birth_date)->format('d.m.Y') : 'Belirtilmemiş' }}</p>
+    <p><strong>Cinsiyet:</strong>
+        @if ($patient->gender_id == 1)
+            Erkek
+        @elseif($patient->gender_id == 2)
+            Kadın
+        @else
+            Belirtilmedi
+        @endif
+    </p>
+
+    <p><strong>Ülke:</strong> {{ $patient->country_name ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Şehir:</strong> {{ $patient->city_name ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Adres:</strong> {{ $patient->address ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Hizmet:</strong> {{ $patient->service_name ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Kaynak:</strong> {{ $patient->source_id ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Sorumlu Kullanıcı:</strong> {{ $patient->user_name ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Doktor:</strong> {{ $patient->doctor_name ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Durum:</strong> {{ $patient->status_name ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Kan Grubu:</strong> {{ $patient->blood_type ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Boy:</strong> {{ $patient->height ?? '-' }} cm</p>
+    <p><strong>Kilo:</strong> {{ $patient->weight ?? '-' }} kg</p>
+    <p><strong>Acil Durum İrtibatı:</strong> {{ $patient->emergency_contact_name ?? 'Belirtilmemiş' }}</p>
+    <p><strong>Oluşturulma Tarihi:</strong> {{ $patient->created_at ? \Carbon\Carbon::parse($patient->created_at)->format('d.m.Y H:i') : '-' }}</p>
+    <p><strong>Güncellenme Tarihi:</strong> {{ $patient->updated_at ? \Carbon\Carbon::parse($patient->updated_at)->format('d.m.Y H:i') : '-' }}</p>
+</div>
+
             </div>
+
         </div>
         <div class="col-md-8">
             <div class="card mb-3 shadow-sm">
@@ -676,7 +691,6 @@
                     }
                 });
             });
-
             // Silme
             $('#deletePatient').click(function(e) {
                 e.preventDefault();
@@ -719,7 +733,6 @@
                     }
                 });
             })
-
             // Arama Yap
             $(document).on('click', '#callButton', function(e) {
                 e.preventDefault();
