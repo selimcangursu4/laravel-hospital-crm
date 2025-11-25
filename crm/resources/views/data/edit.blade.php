@@ -613,7 +613,7 @@ $(document).ready(function(){
         }
     });
     });
-       // Hasta Bilgilerini Güncelle
+    // Hasta Bilgilerini Güncelle
     $('#patientUpdateSave').click(function(e){
       e.preventDefault();
 
@@ -683,6 +683,13 @@ $(document).ready(function(){
             });
         }
     });
+    // Doktor Atama
+
+    // Silme
+
+    // Arama Yap
+
+    
 });
 
 
