@@ -10,8 +10,9 @@
 </button>
   <button class="btn btn-info">
     <i class="fas fa-phone me-1"></i> Arama Yap </button>
-  <button class="btn btn-warning">
-    <i class="fab fa-whatsapp me-1"></i> WhatsApp'tan Ulaş </button>
+<a href="https://wa.me/{{$patient->phone}}" target="_blank" class="btn btn-warning">
+  <i class="fab fa-whatsapp me-1"></i> WhatsApp'tan Ulaş
+</a>
 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editPatientModal">
     <i class="fas fa-edit me-1"></i> Bilgileri Düzenle
 </button>
@@ -501,9 +502,9 @@ $(document).ready(function(){
     });
     // Ameliyat Randevusu Ayarla
     $('#saveSurgeryBtn').click(function(e){
-    e.preventDefault();
+     e.preventDefault();
 
-    $.ajax({
+     $.ajax({
         type:"POST",
         url:"{{ route('operation.store') }}",
         data:{
@@ -538,6 +539,7 @@ $(document).ready(function(){
             });
         }
     });
+    // 
 });
 
 });
