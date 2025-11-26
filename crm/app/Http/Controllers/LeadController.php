@@ -137,7 +137,7 @@ class LeadController extends Controller
     // Tüm Leadleri Getirme
     public function fetch(Request $request)
     {
-    $query = Lead::select(
+      $query = Lead::select(
         'leads.id',
         'leads.fullname',
         'leads.phone',
@@ -146,42 +146,42 @@ class LeadController extends Controller
         'lead_sources.name as source_name',
         'lead_statues.name as status_name',
         'users.name as user_name'
-    )
-    ->leftJoin('services', 'leads.service_id', '=', 'services.id')
-    ->leftJoin('lead_sources', 'leads.source_id', '=', 'lead_sources.id')
-    ->leftJoin('lead_statues', 'leads.lead_status_id', '=', 'lead_statues.id')
-    ->leftJoin('users', 'leads.user_id', '=', 'users.id');
+      )
+      ->leftJoin('services', 'leads.service_id', '=', 'services.id')
+      ->leftJoin('lead_sources', 'leads.source_id', '=', 'lead_sources.id')
+      ->leftJoin('lead_statues', 'leads.lead_status_id', '=', 'lead_statues.id')
+      ->leftJoin('users', 'leads.user_id', '=', 'users.id');
 
 
-    // Filtreleme
-    if ($request->search_id) {
+      // Filtreleme
+      if ($request->search_id) {
         $query->where('leads.id', $request->search_id);
-    }
-    if ($request->search_fullname) {
+      }
+      if ($request->search_fullname) {
         $query->where('leads.fullname', 'like', '%' . $request->search_fullname . '%');
-    }
-    if ($request->search_phone) {
+      }
+      if ($request->search_phone) {
         $query->where('leads.phone', 'like', '%' . $request->search_phone . '%');
-    }
-    if ($request->search_gender_id) {
+      }
+      if ($request->search_gender_id) {
         $query->where('leads.gender_id', $request->search_gender_id);
-    }
-    if ($request->search_service_id) {
+      }
+      if ($request->search_service_id) {
         $query->where('leads.service_id', $request->search_service_id);
-    }
-    if ($request->search_source_id) {
+      }
+      if ($request->search_source_id) {
         $query->where('leads.source_id', $request->search_source_id);
-    }
-    if ($request->search_lead_status_id) {
+      }
+      if ($request->search_lead_status_id) {
         $query->where('leads.lead_status_id', $request->search_lead_status_id);
-    }
-    if ($request->search_user_id) {
+      }
+      if ($request->search_user_id) {
         $query->where('leads.user_id', $request->search_user_id);
-    }
+      }
 
-    $leads = $query->get();
+      $leads = $query->get();
 
-    return response()->json($leads);
+      return response()->json($leads);
     }
     // Lead Düzenleme Sayfası
     public function edit($id)
@@ -246,6 +246,7 @@ class LeadController extends Controller
             ->where('lead_files.lead_id', $id)
             ->orderBy('lead_files.created_at', 'desc')
             ->get();
+
 
         return view('leads.edit',compact('lead','sources','services','statuses','users','activities','callLogs','smsLogs','leadFiles'));
     }

@@ -92,7 +92,63 @@ class DataController extends Controller
     // Hasta Mini Rapor Sayfası
     public function miniReport()
     {
-        return view('data.reports-data');
+     // Bugün tarih
+     $today = now()->format('Y-m-d');
+
+     // Bugün Eklenen Yeni Hasta
+     $newPatientsToday = DB::table('patients')
+        ->whereDate('created_at', $today)
+        ->count();
+
+     // Bugün Güncellenen Hasta
+     $updatedPatientsToday = DB::table('patients')
+        ->whereDate('updated_at', $today)
+        ->whereColumn('updated_at', '!=', 'created_at')
+        ->count();
+
+     //  Günlük Yapılan Hasta Araması
+     $dailyCalls = DB::table('patient_call_logs')
+        ->whereDate('created_at', $today)
+        ->count();
+
+     //  Günlük Gönderilen Hasta SMS'i
+     $dailySms = DB::table('patient_sms_log')
+        ->whereDate('created_at', $today)
+        ->count();
+
+     // Bugün Oluşturulan Süreç Logu
+     $dailyProcessLogs = DB::table('process_logs')
+        ->whereDate('created_at', $today)
+        ->count();
+
+     //  Bugün Başarısız Süreç
+     $failedProcesses = DB::table('process_logs')
+        ->whereDate('created_at', $today)
+        ->where('status_id', 9)
+        ->count();
+
+     //  Toplam Aktif Hasta
+     $activePatients = DB::table('patients')
+     ->where('patient_status_id', '!=', 8)
+     ->count();
+
+     //  Günlük Cevapsız Arama
+     $dailyMissedCalls = DB::table('patient_call_logs')
+        ->whereDate('created_at', $today)
+        ->where('call_status', 'missed')
+        ->count();
+
+
+     return view('data.reports-data', [
+        'newPatientsToday'      => $newPatientsToday,
+        'updatedPatientsToday'  => $updatedPatientsToday,
+        'dailyCalls'            => $dailyCalls,
+        'dailySms'              => $dailySms,
+        'dailyProcessLogs'      => $dailyProcessLogs,
+        'failedProcesses'       => $failedProcesses,
+        'activePatients'        => $activePatients,
+        'dailyMissedCalls'      => $dailyMissedCalls,
+     ]);
     }
     // Tüm Hastaları Getirme (Filtreli)
     public function fetch(Request $request)
