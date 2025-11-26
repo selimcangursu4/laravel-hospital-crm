@@ -7,6 +7,7 @@ use App\Http\Controllers\LeadActivityController;
 use App\Http\Controllers\ProcessLogController;
 use App\Http\Controllers\LeadCallLogController;
 use App\Http\Controllers\PatientCallLogController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\SurgeryAppointmentController;
 
@@ -44,9 +45,13 @@ Route::get('/data/index', [DataController::class,'index'])->name('data.index');
 Route::get('/data/detail/{id}', [DataController::class,'detail'])->name('data.detail');
 Route::get('/data/report', [DataController::class,'miniReport'])->name('data.miniReport');
 Route::post('/data/delete', [DataController::class, 'delete'])->name('data.delete');
-// Data İşlem Rotaları
+// Data İşlem Routes
 Route::post('/data/process/store', [ProcessLogController::class,'store'])->name('process.store');
 Route::post('/data/operation/store', [SurgeryAppointmentController::class,'store'])->name('operation.store');
-
 // Data Call Log Routes
 Route::post('/patient/call-log', [PatientCallLogController::class, 'logOutgoingCall'])->name('patient.call.log');
+// Metting Routes
+Route::get('/meeting/view', [MeetingController::class,'view'])->name('meeting.view');
+Route::get('/meeting/operation/view', [MeetingController::class,'operationView'])->name('meeting.operationView');
+Route::get('/meeting/calendar/view', [MeetingController::class,'calendarView'])->name('meeting.calendarView');
+Route::get('/meeting/appointment/view', [MeetingController::class,'appointmentView'])->name('meeting.appointmentView');
