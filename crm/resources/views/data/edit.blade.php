@@ -29,36 +29,42 @@
                         <i class="fas fa-user me-1"></i> Hasta Bilgileri
                     </h5>
                 </div>
-         <div class="card-body">
-    <p><strong>Ad Soyad:</strong> {{ $patient->fullname ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Telefon:</strong> {{ $patient->phone ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Email:</strong> {{ $patient->email ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Doğum Tarihi:</strong> {{ $patient->birth_date ? \Carbon\Carbon::parse($patient->birth_date)->format('d.m.Y') : 'Belirtilmemiş' }}</p>
-    <p><strong>Cinsiyet:</strong>
-        @if ($patient->gender_id == 1)
-            Erkek
-        @elseif($patient->gender_id == 2)
-            Kadın
-        @else
-            Belirtilmedi
-        @endif
-    </p>
+                <div class="card-body">
+                    <p><strong>Ad Soyad:</strong> {{ $patient->fullname ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Telefon:</strong> {{ $patient->phone ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Email:</strong> {{ $patient->email ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Doğum Tarihi:</strong>
+                        {{ $patient->birth_date ? \Carbon\Carbon::parse($patient->birth_date)->format('d.m.Y') : 'Belirtilmemiş' }}
+                    </p>
+                    <p><strong>Cinsiyet:</strong>
+                        @if ($patient->gender_id == 1)
+                            Erkek
+                        @elseif($patient->gender_id == 2)
+                            Kadın
+                        @else
+                            Belirtilmedi
+                        @endif
+                    </p>
 
-    <p><strong>Ülke:</strong> {{ $patient->country_name ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Şehir:</strong> {{ $patient->city_name ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Adres:</strong> {{ $patient->address ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Hizmet:</strong> {{ $patient->service_name ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Kaynak:</strong> {{ $patient->source_id ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Sorumlu Kullanıcı:</strong> {{ $patient->user_name ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Doktor:</strong> {{ $patient->doctor_name ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Durum:</strong> {{ $patient->status_name ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Kan Grubu:</strong> {{ $patient->blood_type ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Boy:</strong> {{ $patient->height ?? '-' }} cm</p>
-    <p><strong>Kilo:</strong> {{ $patient->weight ?? '-' }} kg</p>
-    <p><strong>Acil Durum İrtibatı:</strong> {{ $patient->emergency_contact_name ?? 'Belirtilmemiş' }}</p>
-    <p><strong>Oluşturulma Tarihi:</strong> {{ $patient->created_at ? \Carbon\Carbon::parse($patient->created_at)->format('d.m.Y H:i') : '-' }}</p>
-    <p><strong>Güncellenme Tarihi:</strong> {{ $patient->updated_at ? \Carbon\Carbon::parse($patient->updated_at)->format('d.m.Y H:i') : '-' }}</p>
-</div>
+                    <p><strong>Ülke:</strong> {{ $patient->country_name ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Şehir:</strong> {{ $patient->city_name ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Adres:</strong> {{ $patient->address ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Hizmet:</strong> {{ $patient->service_name ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Kaynak:</strong> {{ $patient->source_id ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Sorumlu Kullanıcı:</strong> {{ $patient->user_name ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Doktor:</strong> {{ $patient->doctor_name ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Durum:</strong> {{ $patient->status_name ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Kan Grubu:</strong> {{ $patient->blood_type ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Boy:</strong> {{ $patient->height ?? '-' }} cm</p>
+                    <p><strong>Kilo:</strong> {{ $patient->weight ?? '-' }} kg</p>
+                    <p><strong>Acil Durum İrtibatı:</strong> {{ $patient->emergency_contact_name ?? 'Belirtilmemiş' }}</p>
+                    <p><strong>Oluşturulma Tarihi:</strong>
+                        {{ $patient->created_at ? \Carbon\Carbon::parse($patient->created_at)->format('d.m.Y H:i') : '-' }}
+                    </p>
+                    <p><strong>Güncellenme Tarihi:</strong>
+                        {{ $patient->updated_at ? \Carbon\Carbon::parse($patient->updated_at)->format('d.m.Y H:i') : '-' }}
+                    </p>
+                </div>
 
             </div>
 
@@ -126,7 +132,26 @@
                                 <th>Tarih</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                            @foreach ($smsLogs as $index => $log)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $log->message ?? 'Belirtilmemiş' }}</td>
+                                    <td>
+                                        @if ($log->status == "pending")
+                                            Beklemede
+                                        @elseif($log->status == "success")
+                                            Başarılı
+                                        @else
+                                            Bilinmiyor
+                                        @endif
+                                    </td>
+                                    <td>{{ $log->called_by_name}}</td>
+                                    <td>{{ $log->created_at ? \Carbon\Carbon::parse($log->created_at)->format('d.m.Y H:i') : '-' }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -148,7 +173,37 @@
                                 <th>Tarih</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                               @foreach ($dataCallLog as $index => $log)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>
+                                        @if ($log->call_type == "outgoing")
+                                            Giden Çağrı
+                                        @elseif($log->call_type == "incoming")
+                                            Gelen Çağrı
+                                        @else
+                                            Bilinmiyor
+                                        @endif
+                                    </td>
+                                      <td>{{ $log->call_duration}}</td>
+                                     <td>
+                                        @if ($log->call_status == "completed")
+                                            Başarılı
+                                        @elseif($log->call_status == "missed")
+                                             Beklemede
+                                             @elseif($log->call_status == "failed")
+                                            Başarısız
+                                        @else
+                                            Bilinmiyor
+                                        @endif
+                                    </td>
+                                     <td>{{ $log->called_by_name}}</td>
+                                    <td>{{ $log->created_at ? \Carbon\Carbon::parse($log->created_at)->format('d.m.Y H:i') : '-' }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>

@@ -149,25 +149,42 @@ class DataController extends Controller
     public function edit($id)
     {
        $patient = DB::table('patients')
-    ->leftJoin('services', 'patients.service_id', '=', 'services.id')
-    ->leftJoin('patient_statues', 'patients.patient_status_id', '=', 'patient_statues.id')
-    ->leftJoin('users', 'patients.user_id', '=', 'users.id')
-    ->leftJoin('doctors', 'patients.doctor_id', '=', 'doctors.id')
-
-    ->select(
+      ->leftJoin('services', 'patients.service_id', '=', 'services.id')
+      ->leftJoin('patient_statues', 'patients.patient_status_id', '=', 'patient_statues.id')
+      ->leftJoin('users', 'patients.user_id', '=', 'users.id')
+      ->leftJoin('doctors', 'patients.doctor_id', '=', 'doctors.id')
+      ->select(
         'patients.*',
         'services.name as service_name',
         'patient_statues.name as status_name',
         'users.name as user_name',
         'doctors.fullname as doctor_name',
 
-    )
-    ->where('patients.id', $id)
-    ->first();
+       )
+       ->where('patients.id', $id)
+       ->first();
+        $smsLogs = DB::table('patient_sms_log')
+            ->leftJoin('users', 'patient_sms_log.user_id', '=', 'users.id')
+            ->select(
+            'patient_sms_log.*',
+            'users.name as called_by_name'
+             )
+            ->where('patient_sms_log.lead_id', $id)
+            ->orderBy('patient_sms_log.created_at', 'desc')
+            ->get();
         $services = Service::all();
         $doctors = Doctor::all();
+        $dataCallLog = DB::table('patient_call_logs')
+        ->leftJoin('users', 'patient_call_logs.called_by', '=', 'users.id')
+        ->select(
+        'patient_call_logs.*',
+        'users.name as called_by_name'
+        )
+        ->where('patient_call_logs.patient_id', $id)
+        ->orderBy('patient_call_logs.created_at', 'desc')
+        ->get();
 
-        return view('data.edit', compact('patient', 'services', 'doctors'));
+        return view('data.edit', compact('patient', 'services', 'doctors','smsLogs','dataCallLog'));
     }
     // Hasta Bilgilerini Güncelle
     public function update(Request $request)
