@@ -27,6 +27,10 @@
             <button type="button" class="btn btn-dark me-2" data-bs-toggle="modal" data-bs-target="#fileAttachModal">
                 <i data-feather="paperclip" class="me-1"></i> Dosya Eki Ekle
             </button>
+            <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal"
+                data-bs-target="#appointmentCreateModal">
+                <i data-feather="paperclip" class="me-1"></i> Ön Randevu Oluştur
+            </button>
         </div>
         <div class="row">
             <div class="col-md-4">
@@ -511,6 +515,54 @@
                     </div>
                 </div>
             </div>
+            <!-- Ön Randevu Oluştur Modal -->
+            <div class="modal fade" id="appointmentCreateModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Ön Randevu Oluştur</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                @csrf
+                                <div class="mb-3" hidden>
+                                    <label for="pre_appointment_lead_id">Lead Id</label>
+                                    <input type="text" id="appointment_lead_id" class="form-control"
+                                        value="{{ $lead->id }}" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pre_appointment_date">Randevu Tarihi</label>
+                                    <input type="datetime-local" id="appointment_date" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pre_appointment_service_id">İlgilendiği Hizmet</label>
+                                    <select class="form-select mb-3" id="appointment_service_id">
+                                        <option value="" disabled>Seçiniz</option>
+                                        @foreach ($services as $service)
+                                            <option value="{{ $service->id }}"
+                                                {{ $lead->service_id == $service->id ? 'selected' : '' }}>
+                                                {{ $service->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pre_appointment_note">Ön Randevu Notu</label>
+                                    <textarea id="appointment_note" class="form-control"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                    <button type="button" id="saveAppointment" class="btn btn-primary">Ön Randevu
+                                        Ekle</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
         <script>
             $(document).ready(function() {
@@ -816,6 +868,50 @@
                         }
                     });
                 });
+                // Ön Randevu Oluşturma
+                $('#saveAppointment').click(function(e) {
+                    e.preventDefault();
+
+                    let lead_id = $('#appointment_lead_id').val();
+                    let appointment_date = $('#appointment_date').val();
+                    let appointment_service_id = $('#appointment_service_id').val();
+                    let appointment_note = $('#appointment_note').val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('preappointment.store') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            lead_id: lead_id,
+                            appointment_date: appointment_date,
+                            appointment_service_id: appointment_service_id,
+                            appointment_note: appointment_note
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Başarılı!',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+
+                            $('#appointmentCreateModal').modal('hide');
+                        },
+
+                        error: function(error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata!',
+                                text: error.responseJSON?.message ??
+                                    'Ön Randevu Oluşturulurken bir sorun oluştu.',
+                            });
+
+                            console.log(error);
+                        }
+
+                    })
+                })
             })
         </script>
     @endsection

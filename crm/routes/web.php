@@ -10,6 +10,7 @@ use App\Http\Controllers\PatientCallLogController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\SurgeryAppointmentController;
+use App\Http\Controllers\PreAppointmentController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -55,3 +56,6 @@ Route::get('/meeting/view', [MeetingController::class,'view'])->name('meeting.vi
 Route::get('/meeting/operation/view', [MeetingController::class,'operationView'])->name('meeting.operationView');
 Route::get('/meeting/calendar/view', [MeetingController::class,'calendarView'])->name('meeting.calendarView');
 Route::get('/meeting/appointment/view', [MeetingController::class,'appointmentView'])->name('meeting.appointmentView');
+// PreAppointment Routes
+Route::post('/pre-appointment/storrer', [PreAppointmentController::class,'store'])->name('preappointment.store');
+
