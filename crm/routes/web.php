@@ -8,6 +8,7 @@ use App\Http\Controllers\ProcessLogController;
 use App\Http\Controllers\LeadCallLogController;
 use App\Http\Controllers\PatientCallLogController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\OperationController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\SurgeryAppointmentController;
 use App\Http\Controllers\PreAppointmentController;
@@ -60,4 +61,5 @@ Route::get('/meeting/appointment/view', [MeetingController::class,'appointmentVi
 Route::post('/pre-appointment/store', [PreAppointmentController::class,'store'])->name('preappointment.store');
 Route::get('/pre-appointment/fetch', [PreAppointmentController::class,'fetch'])->name('preappointment.fetch');
 Route::post('/pre-appointment/update', [PreAppointmentController::class,'statusUpdate'])->name('preappointment.update');
-
+// Operasyonları Listele
+Route::get('/operations/fetch', [OperationController::class,'fetch'])->name('operations.fetch');
