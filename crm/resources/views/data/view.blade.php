@@ -12,7 +12,7 @@
             <div class="col-md-4">
                 <div class="card p-3">
                     <h4>Yeni Hasta Ekle</h4>
-                    <p>Sisteme Yeni Bir Hasta Kaydı Eklemek İçin Tıklayın.</p>
+                    <p>Sisteme Yeni Hasta Kaydı Eklemek İçin Tıklayın.</p>
                     <a href="{{route('data.create')}}" class="btn btn-primary">Görüntüle</a>
                 </div>
             </div>

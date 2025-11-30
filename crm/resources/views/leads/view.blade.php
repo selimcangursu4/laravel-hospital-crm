@@ -12,7 +12,7 @@
             <div class="col-md-4">
                 <div class="card p-3">
                     <h4>Yeni Lead Ekle</h4>
-                    <p>Sisteme Yeni Bir Lead Kaydı Eklemek İçin Tıklayın.</p>
+                    <p>Sisteme Yeni Lead Kaydı Eklemek İçin Tıklayın.</p>
                     <a href="{{route('leads.create')}}" class="btn btn-primary">Görüntüle</a>
                 </div>
             </div>

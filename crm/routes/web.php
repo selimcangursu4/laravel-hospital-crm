@@ -57,5 +57,7 @@ Route::get('/meeting/operation/view', [MeetingController::class,'operationView']
 Route::get('/meeting/calendar/view', [MeetingController::class,'calendarView'])->name('meeting.calendarView');
 Route::get('/meeting/appointment/view', [MeetingController::class,'appointmentView'])->name('meeting.appointmentView');
 // PreAppointment Routes
-Route::post('/pre-appointment/storrer', [PreAppointmentController::class,'store'])->name('preappointment.store');
+Route::post('/pre-appointment/store', [PreAppointmentController::class,'store'])->name('preappointment.store');
+Route::get('/pre-appointment/fetch', [PreAppointmentController::class,'fetch'])->name('preappointment.fetch');
+Route::post('/pre-appointment/update', [PreAppointmentController::class,'statusUpdate'])->name('preappointment.update');
 
