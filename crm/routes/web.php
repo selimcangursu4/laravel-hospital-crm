@@ -6,6 +6,7 @@ use App\Http\Controllers\SmsLogController;
 use App\Http\Controllers\LeadActivityController;
 use App\Http\Controllers\ProcessLogController;
 use App\Http\Controllers\LeadCallLogController;
+use App\Http\Controllers\FinanceContoller;
 use App\Http\Controllers\PatientCallLogController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\OperationController;
@@ -61,5 +62,9 @@ Route::get('/meeting/appointment/view', [MeetingController::class,'appointmentVi
 Route::post('/pre-appointment/store', [PreAppointmentController::class,'store'])->name('preappointment.store');
 Route::get('/pre-appointment/fetch', [PreAppointmentController::class,'fetch'])->name('preappointment.fetch');
 Route::post('/pre-appointment/update', [PreAppointmentController::class,'statusUpdate'])->name('preappointment.update');
-// Operasyonları Listele
+// Operasyon Rotası
 Route::get('/operations/fetch', [OperationController::class,'fetch'])->name('operations.fetch');
+// Finans Rotaları
+Route::get('/finance/view', [FinanceContoller::class,'view'])->name('finance.view');
+Route::get('/finance/send-payment', [FinanceContoller::class,'sendPayment'])->name('finance.sendPayment');
+Route::post('/finance/send-payment-post', [FinanceContoller::class,'sendPaymentStore'])->name('finance.sendPayment.post');

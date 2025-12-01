@@ -32,7 +32,7 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-sign-up.html">
+                <a class="sidebar-link" href="{{route('finance.view')}}">   
                     <i class="align-middle" data-feather="credit-card"></i>
                     <span class="align-middle">Finans ve Muhasebe</span>
                 </a>
