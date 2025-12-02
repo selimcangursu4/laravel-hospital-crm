@@ -13,14 +13,7 @@
                 <div class="card p-3">
                     <h4>Ödeme Tamamla</h4>
                     <p>Bu Alandan Muayene Ücreti Girilebilir</p>
-                    <a href="{{route('meeting.appointmentView')}}" class="btn btn-primary">Görüntüle</a>
-                </div>
-            </div>
-             <div class="col-md-4">
-                <div class="card p-3">
-                    <h4>Gider Ekle</h4>
-                    <p>Bu Alandan Hastane Gideris Eklenebilir</p>
-                    <a href="{{route('meeting.operationView')}}" class="btn btn-primary">Görüntüle</a>
+                    <a href="{{route('finance.createPayment')}}" class="btn btn-primary">Görüntüle</a>
                 </div>
             </div>
         </div>

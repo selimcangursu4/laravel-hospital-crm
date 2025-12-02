@@ -114,10 +114,8 @@
                         });
                         console.log(xhr.responseText);
                     }
-
                 });
             });
-
         });
     </script>
 @endsection

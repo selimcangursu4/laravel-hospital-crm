@@ -68,3 +68,9 @@ Route::get('/operations/fetch', [OperationController::class,'fetch'])->name('ope
 Route::get('/finance/view', [FinanceContoller::class,'view'])->name('finance.view');
 Route::get('/finance/send-payment', [FinanceContoller::class,'sendPayment'])->name('finance.sendPayment');
 Route::post('/finance/send-payment-post', [FinanceContoller::class,'sendPaymentStore'])->name('finance.sendPayment.post');
+Route::get('/finance/create-payment', [FinanceContoller::class,'createPayment'])->name('finance.createPayment');
+Route::get('/finance/payments/fetch', [FinanceContoller::class, 'fetch'])->name('payment.fetch');
+Route::post('/payments/update-status', [FinanceContoller::class, 'paymentStatusUpdate'])->name('payment.status.update');
+
+
+

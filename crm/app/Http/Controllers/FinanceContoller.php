@@ -82,5 +82,88 @@ class FinanceContoller extends Controller
         ], 500);
       }
     }
+    // Ödeme Tamamlama Sayfası
+    public function createPayment()
+    {
+        return view('finance.create-payment');
+    }
+    // Ödemeleri Listele
+    public function fetch(Request $request)
+    {
+      $columns = [
+        0 => 'payment.id',
+        1 => 'patients.name',
+        2 => 'services.name',
+        3 => 'payment.service_price',
+        4 => 'payment.discount',
+        5 => 'payment.final_price',
+        6 => 'payment.payment_status',
+        7 => 'payment.created_at'
+       ];
+
+       $query = Payment::query()
+        ->leftJoin('patients', 'patients.id', '=', 'payment.customer_id')
+        ->leftJoin('services', 'services.id', '=', 'payment.service_id')
+        ->select(
+            'payment.*',
+            'patients.fullname as patient_name',
+            'services.name as service_name'
+        );
+       if ($request->order) {
+        $orderCol = $columns[$request->order[0]['column']];
+        $orderDir = $request->order[0]['dir'];
+        $query->orderBy($orderCol, $orderDir);
+       }
+
+       $start = $request->start ?? 0;
+       $length = $request->length ?? 10;
+
+       $totalRecords = Payment::count();
+
+        $data = $query->skip($start)->take($length)->get();
+
+        // İşlem butonu ekle
+        $data->transform(function ($row) {
+        $row->actions = '
+            <button class="btn btn-sm btn-primary editStatusBtn"
+                data-id="'.$row->id.'"
+                data-status="'.$row->payment_status.'">
+                Durumu Değiştir
+            </button>';
+        return $row;
+        });
+
+        return response()->json([
+        'draw' => intval($request->draw),
+        'recordsTotal' => $totalRecords,
+        'recordsFiltered' => $totalRecords,
+        'data' => $data
+        ]);
+    }
+    // Ödeme Durumunu Güncelle
+    public function paymentStatusUpdate(Request $request)
+    {
+      $request->validate([
+        'payment_id' => 'required|exists:payment,id',
+        'payment_status' => 'required|string|in:Beklemede,Ödeme Tamamlandı,İptal Edildi,İade Edildi'
+      ]);
+
+      // Ödeme kaydını bul
+      $payment = Payment::find($request->payment_id);
+
+      if (!$payment) {
+        return response()->json(['success' => false, 'message' => 'Ödeme kaydı bulunamadı.'], 404);
+      }
+
+      // Durumu güncelle
+      $payment->payment_status = $request->payment_status;
+      $payment->save();
+
+      return response()->json(['success' => true, 'message' => 'Ödeme durumu başarıyla güncellendi.']);
+    }
     
+
+
+
+
 }

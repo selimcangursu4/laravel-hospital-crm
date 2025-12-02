@@ -51,6 +51,12 @@
                 </a>
             </li>
 
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="pages-sign-up.html">
+                    <i class="align-middle" data-feather="book"></i>
+                    <span class="align-middle"> Dokumantasyon</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
