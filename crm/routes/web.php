@@ -6,6 +6,7 @@ use App\Http\Controllers\SmsLogController;
 use App\Http\Controllers\LeadActivityController;
 use App\Http\Controllers\ProcessLogController;
 use App\Http\Controllers\LeadCallLogController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\FinanceContoller;
 use App\Http\Controllers\PatientCallLogController;
 use App\Http\Controllers\MeetingController;
@@ -71,6 +72,5 @@ Route::post('/finance/send-payment-post', [FinanceContoller::class,'sendPaymentS
 Route::get('/finance/create-payment', [FinanceContoller::class,'createPayment'])->name('finance.createPayment');
 Route::get('/finance/payments/fetch', [FinanceContoller::class, 'fetch'])->name('payment.fetch');
 Route::post('/payments/update-status', [FinanceContoller::class, 'paymentStatusUpdate'])->name('payment.status.update');
-
-
-
+// Raporlar Rotaları
+Route::get('/report/view', [ReportController::class,'view'])->name('report.view');

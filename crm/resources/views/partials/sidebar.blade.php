@@ -38,7 +38,7 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-sign-up.html">
+                <a class="sidebar-link" href="{{route('report.view')}}">
                     <i class="align-middle" data-feather="bar-chart-2"></i>
                     <span class="align-middle">Raporlama ve Analitik</span>
                 </a>
