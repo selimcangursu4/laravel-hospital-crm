@@ -83,3 +83,4 @@ Route::get('/setting/users/',[UserController::class,'index'])->name('setting.use
 
 Route::get('/setting/users/create',[UserController::class,'create'])->name('setting.user.create');
 Route::get('/setting/users/fetch', [UserController::class, 'fetch'])->name('users.fetch');
+Route::post('/setting/users/store', [UserController::class, 'store'])->name('users.store');

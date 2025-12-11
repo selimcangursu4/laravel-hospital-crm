@@ -59,4 +59,34 @@ class UserController extends Controller
             'data'            => $data,
         ]);
     }
+  public function store(Request $request)
+{
+    try {
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:5',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => $request->password, 
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Kullanıcı başarıyla oluşturuldu.'
+        ]);
+
+    } catch (Exception $e) {
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Bir hata oluştu.'
+        ], 500);
+    }
+}
+
 }
