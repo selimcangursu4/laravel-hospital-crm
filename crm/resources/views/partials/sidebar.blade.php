@@ -8,7 +8,7 @@
                 Menü
             </li>
             <li class="sidebar-item active">
-                <a class="sidebar-link" href="index.html">
+                <a class="sidebar-link" href="/">
                     <i class="align-middle" data-feather="activity"></i>
                     <span class="align-middle">Kontrol Paneli</span>
                 </a>
@@ -45,7 +45,7 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-sign-up.html">
+                <a class="sidebar-link" href="{{route('setting.view')}}">
                     <i class="align-middle" data-feather="settings"></i>
                     <span class="align-middle">Ayarlar</span>
                 </a>

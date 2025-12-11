@@ -8,12 +8,14 @@ use App\Http\Controllers\ProcessLogController;
 use App\Http\Controllers\LeadCallLogController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\FinanceContoller;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PatientCallLogController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\OperationController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\SurgeryAppointmentController;
 use App\Http\Controllers\PreAppointmentController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -74,3 +76,10 @@ Route::get('/finance/payments/fetch', [FinanceContoller::class, 'fetch'])->name(
 Route::post('/payments/update-status', [FinanceContoller::class, 'paymentStatusUpdate'])->name('payment.status.update');
 // Raporlar Rotaları
 Route::get('/report/view', [ReportController::class,'view'])->name('report.view');
+// Ayarlar Rotaları
+Route::get('/setting/view', [SettingController::class,'view'])->name('setting.view');
+// Ayarlar Kullanıcı Rotaları
+Route::get('/setting/users/',[UserController::class,'index'])->name('setting.user.index');
+
+Route::get('/setting/users/create',[UserController::class,'create'])->name('setting.user.create');
+Route::get('/setting/users/fetch', [UserController::class, 'fetch'])->name('users.fetch');
