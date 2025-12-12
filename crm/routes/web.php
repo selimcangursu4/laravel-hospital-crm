@@ -105,5 +105,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/setting/users/create',[UserController::class,'create'])->name('setting.user.create');
     Route::get('/setting/users/fetch', [UserController::class, 'fetch'])->name('users.fetch');
     Route::post('/setting/users/store', [UserController::class, 'store'])->name('users.store');
+
+    Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
 });
 
