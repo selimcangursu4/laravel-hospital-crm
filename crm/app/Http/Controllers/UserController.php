@@ -12,12 +12,10 @@ class UserController extends Controller
     {
         return view('settings.user.index');
     }
-
     public function create()
     {
         return view('settings.user.create');
     }
-
      public function fetch(Request $request)
     {
         $draw   = $request->get('draw');
@@ -59,8 +57,8 @@ class UserController extends Controller
             'data'            => $data,
         ]);
     }
-  public function store(Request $request)
-{
+    public function store(Request $request)
+    {
     try {
 
         $request->validate([
@@ -87,6 +85,6 @@ class UserController extends Controller
             'message' => 'Bir hata oluştu.'
         ], 500);
     }
-}
+    }
 
 }
